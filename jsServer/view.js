@@ -14,19 +14,21 @@ var view = (function() {
         
     };
     view.prototype = {
+        preGame: document.getElementById('preGame'),
+        randomRoomCode: document.getElementById('randomRoomCode'),
+        listUsers: document.getElementById('listUsers'),
         status: document.getElementById('status'),
-        userName: document.getElementById('userName'),
-        listName: document.getElementById('listName'),
-        UserNameInput: document.getElementById('username'),
-        this: this,
 
         updateStatus: function(status){
+            //var keyRoom = Math.random().toString(36).substr(2, 5);
             this.status.innerHTML = "<p>status - " + status + "</p>";
         },
 
-        updateUsername: function(username){
+        updateRandomRoomCode: function(username){
+            var roomNumber = 
             this.userName.innerHTML = "<p>username - " + username + "</p>";
         },
+        
         updateListAllUsers: function(listUsers){
             var arrayUsers = listUsers.split(' ');
             console.log(arrayUsers);
@@ -39,8 +41,9 @@ var view = (function() {
         // i need this but i can't use bind because
         // i'll loose the value's of the event.
         run:  function(){  
-            
             var that = this;
+            this.sendServer.getRoomKey();
+            
             this.UserNameInput.addEventListener('keypress', function(evt) {
                 if (evt.keyCode != 13 || this.value == "")
                     return;
@@ -54,6 +57,7 @@ var view = (function() {
                 //first connection
 
             });
+            
         }
         
     }

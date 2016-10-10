@@ -57,25 +57,31 @@ class Chat implements MessageComponentInterface
         // Parse the json
         $data = $this->parseMessage($msg);
         $currClient = $this->repository->getClientByConnection($conn);
-
+        
+        /*client / users */
         // Distinguish between the actions
         if ($data->action === "setname")
         {
+            /*!!!!!!!!!!!!!!!!!!!!!!*/
+            //probably should get a return to see if it changed or not
             $currClient->setName($data->username);
-            /*
+            
             $names = '';
+            //first i have to get all the names
             foreach ($this->repository->getClients() as $client)
             {
                 echo $client->getName();
                 $names = $names . $client->getName() . ' ';
             }
+            
             echo $names . PHP_EOL ;
             
+            //then i have to send all the name to each person
             foreach ($this->repository->getClients() as $client)
             {
-                $client->sendInitNames($names);
+                $client->sendAllNames($names);
             }
-            */
+            
             
         }
         else if ($data->action === "message")
@@ -91,6 +97,14 @@ class Chat implements MessageComponentInterface
                     $client->sendMsg($currClient->getName(), $data->msg);
             }
         }
+        /*end client / users */
+        
+        /*server client */
+        else if ($data->action === "getroomkey")
+        {
+           echo "got getroomkey message";
+        }
+        /*end server client */
     }
 
     /**

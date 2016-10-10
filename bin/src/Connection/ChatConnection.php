@@ -85,13 +85,13 @@ class ChatConnection implements ChatConnectionInterface
         ]);
     }
 
-    public function sendInitNames($names)
+    public function sendAllNames($names)
     {
         echo "sending all names " . PHP_EOL;
         $this->send([
-           'action' => 'initNames',
+           'action' => 'allnames',
            'success' => true,
-           'names' => $names
+           'allnames' => $names
         ]);
     }
     

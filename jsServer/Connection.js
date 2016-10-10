@@ -27,7 +27,7 @@ var Connection = (function() {
             self.socket.onclose = function(evt) { self.connectionClose(evt); };
         },
 
-        connectionOpen: function(evt) {
+        congetroomkeynectionOpen: function(evt) {
             console.log("got open connection");
             this.open = true;
             this.view.updateStatus("open");

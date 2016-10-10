@@ -13,7 +13,19 @@ class ChatRepository implements ChatRepositoryInterface
      *
      * @var SplObjectStorage
      */
+    
+    
+    /*
+    all elements are clients
+    */
     private $clients;
+    
+    /*
+    but only the serverClient display all the information and stuff
+    */
+    private $roomNumber;
+    
+    private $serverClient;
 
     /**
      * ChatRepository Constructor

@@ -12,11 +12,10 @@ var sendServer = (function() {
     }
 
     sendServer.prototype = {
-        //this is the call
-        updateUsername: function(name){
+        //maby this should be a built into php application
+        getRoomKey: function(){
             this.socket.send(JSON.stringify({
-                    action: 'setname',
-                    username: name
+                    action: 'getroomkey'
             }));
         }
     };
