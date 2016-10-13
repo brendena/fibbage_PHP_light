@@ -14,9 +14,17 @@ var sendServer = (function() {
     sendServer.prototype = {
         //maby this should be a built into php application
         getRoomKey: function(){
+            //probably should need this.
+            this.socket.send(JSON.stringify({
+                    action: 'setname',
+                    username: "server"
+            }));
+            
             this.socket.send(JSON.stringify({
                     action: 'getroomkey'
             }));
+            
+            console.log("getRoom");
         }
     };
 

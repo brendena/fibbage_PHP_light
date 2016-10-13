@@ -32,7 +32,9 @@ class ChatRepository implements ChatRepositoryInterface
      */
     public function __construct()
     {
+        /*don't understnad*/
         $this->clients = new SplObjectStorage;
+        $this->roomNumber = -1;
     }
 
     /**
@@ -97,10 +99,49 @@ class ChatRepository implements ChatRepositoryInterface
     /**
      * Get all the connected clients
      *
-     * @return SplObjectStorage
+     * @return SplObjectS$serverClienttorage
      */
     public function getClients()
     {
         return $this->clients;
+    }
+    
+    
+    
+    
+    public function setServerClient(ConnectionInterface $conn){
+        //setting Server
+        
+        //should be able to do this
+        $this->serverClient = $conn;
+        
+
+        $this->setRoomNumber();
+        echo $this->roomNumber;
+        
+        $this->serverClient->send(
+            json_encode([
+                    'action'   => 'roomcode',
+                    'success'  => true,
+                    'roomCode' => $this->roomNumber
+                ]
+            )
+        );
+        
+    }
+    
+    public function getServerClient(){
+        foreach ($this->clients  as $client)
+        {
+            echo "hi \n";
+            if( $client->getName() == "server");
+            {
+                return $client;
+            }
+        }  
+    }
+    
+    private function setRoomNumber(){
+        $this->roomNumber = mt_rand();
     }
 }

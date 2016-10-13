@@ -15,4 +15,10 @@ interface ChatRepositoryInterface
     public function removeClient(ConnectionInterface $conn);
 
     public function getClients();
+    
+    
+    
+    public function setServerClient(ConnectionInterface $conn);
+    
+
 }

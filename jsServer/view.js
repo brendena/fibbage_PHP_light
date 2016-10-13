@@ -18,6 +18,7 @@ var view = (function() {
         randomRoomCode: document.getElementById('randomRoomCode'),
         listUsers: document.getElementById('listUsers'),
         status: document.getElementById('status'),
+        connectionButton: document.getElementById('connectionButton'),
 
         updateStatus: function(status){
             //var keyRoom = Math.random().toString(36).substr(2, 5);
@@ -42,8 +43,12 @@ var view = (function() {
         // i'll loose the value's of the event.
         run:  function(){  
             var that = this;
-            this.sendServer.getRoomKey();
-            
+            //setTimeout(that.sendServer.getRoomKey,3000);
+            this.connectionButton.addEventListener("click",function(){
+                console.log("click");
+                that.sendServer.getRoomKey();
+            });
+            /*
             this.UserNameInput.addEventListener('keypress', function(evt) {
                 if (evt.keyCode != 13 || this.value == "")
                     return;
@@ -57,7 +62,7 @@ var view = (function() {
                 //first connection
 
             });
-            
+            */
         }
         
     }

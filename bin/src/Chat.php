@@ -34,15 +34,6 @@ class Chat implements MessageComponentInterface
     {
         $this->repository->addClient($conn);
         echo "got inital connection\n";
-        /*
-        foreach ($this->repository->getClients() as $client)
-        {
-
-            echo $client->getName() . '\n';
-            echo "going through\n";
-            //$client->sendMsg($client->getName());
-        }
-        */
     }
 
     /**
@@ -102,11 +93,19 @@ class Chat implements MessageComponentInterface
         /*server client */
         else if ($data->action === "getroomkey")
         {
+            foreach ($this->repository->getClients() as $client)
+            {
+                echo "hi \n";
+                echo $client->getName();
+                echo "\n";
+            }
+            $this->repository->setServerClient($conn);
            echo "got getroomkey message";
         }
         /*end server client */
     }
 
+    
     /**
      * Parse raw string data
      *

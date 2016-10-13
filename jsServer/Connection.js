@@ -27,7 +27,7 @@ var Connection = (function() {
             self.socket.onclose = function(evt) { self.connectionClose(evt); };
         },
 
-        congetroomkeynectionOpen: function(evt) {
+        connectionOpen: function(evt) {
             console.log("got open connection");
             this.open = true;
             this.view.updateStatus("open");
@@ -42,23 +42,7 @@ var Connection = (function() {
             
             
             var data = JSON.parse(evt.data);
-            if (data.action == 'setname') {
-                console.log(data.success);
-                console.log(data);
-                if (data.success)
-                   console.log("all good");
-                else
-                    this.view.updateUsername("Username " + this.username + " has been taken.");
-            } else if (data.action == 'allnames'){
-                console.log("got message allNames")
-                console.log(data);
-                this.view.updateListAllUsers(data.allnames);
-            } else if (data.action == 'message') {
-                this.addChatMessage(data.username, data.msg);
-            } else if (data.action == 'initNames'){
-                console.log("got data\n");
-                console.log(data);
-            }
+            console.log(data);
               
         },
 
@@ -76,4 +60,4 @@ var Connection = (function() {
 
 
 
-var conn = new Connection("brenden","chatwindow", "127.0.0.1:2000");
+var conn = new Connection("server","chatwindow", "127.0.0.1:2000");

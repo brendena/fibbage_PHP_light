@@ -76,4 +76,4 @@ var Connection = (function() {
 
 
 
-var conn = new Connection("brenden","chatwindow", "127.0.0.1:2000");
+var conn = new Connection("default","chatwindow", "127.0.0.1:2000");
