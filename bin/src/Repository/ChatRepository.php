@@ -23,16 +23,16 @@ class ChatRepository implements ChatRepositoryInterface
     /*
     but only the serverClient display all the information and stuff
     */
-    private $roomNumber;
-    
+
     private $serverClient;
+$server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
+
 
     /**
      * ChatRepository Constructor
      */
     public function __construct()
     {
-        /*don't understnad*/
         $this->clients = new SplObjectStorage;
         $this->roomNumber = -1;
     }
@@ -77,9 +77,9 @@ class ChatRepository implements ChatRepositoryInterface
      * @param ConnectionInterface $conn
      * @return void
      */
-    public function addClient(ConnectionInterface $conn)
+    public function addClient(ConnectionInterface $conn, $userName)
     {
-        $this->clients->attach(new ChatConnection($conn, $this));
+        $this->clients->attach(new ChatConnection($conn, $this, $userName));
     }
 
     /**
@@ -108,40 +108,19 @@ class ChatRepository implements ChatRepositoryInterface
     
     
     
-    
-    public function setServerClient(ConnectionInterface $conn){
-        //setting Server
-        
-        //should be able to do this
-        $this->serverClient = $conn;
-        
-
-        $this->setRoomNumber();
-        echo $this->roomNumber;
-        
-        $this->serverClient->send(
-            json_encode([
-                    'action'   => 'roomcode',
-                    'success'  => true,
-                    'roomCode' => $this->roomNumber
-                ]
-            )
-        );
-        
-    }
-    
-    public function getServerClient(){
-        foreach ($this->clients  as $client)
+    public function getNamesOfClients()
+    {
+        $listPeople = '';
+        foreach ($this->clients as $client)
         {
-            echo "hi \n";
-            if( $client->getName() == "server");
-            {
-                return $client;
-            }
-        }  
+            $listPeople = $listPeople . $client->getName() . " ";
+            
+        }
+        echo "\n list of people \n ";
+        echo $listPeople;
+        echo "\n";
+        
+        return $listPeople;
     }
-    
-    private function setRoomNumber(){
-        $this->roomNumber = mt_rand();
-    }
+
 }

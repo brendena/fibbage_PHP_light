@@ -18,6 +18,15 @@ var sendServer = (function() {
                     action: 'setname',
                     username: name
             }));
+        },
+        
+        connectHost: function(id, userName){
+            this.socket.send(JSON.stringify({
+                action: 'setServer',
+                id: id,
+                userName: userName
+            }));
+            
         }
     };
 

@@ -8,7 +8,7 @@ it has on the view.
 */
 var Connection = (function() {
 
-    function Connection(username, chatWindowId, url) {
+    function Connection(username, url) {
         this.socket = new WebSocket("ws://" + url);
         this.view = new view(this.socket);
         console.log(this.view);
@@ -76,4 +76,4 @@ var Connection = (function() {
 
 
 
-var conn = new Connection("default","chatwindow", "127.0.0.1:2000");
+var conn = new Connection("default", "127.0.0.1:2000");

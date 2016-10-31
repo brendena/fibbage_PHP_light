@@ -2,26 +2,25 @@
 
 namespace Chat;
 
-use Chat\Repository\ChatRepository;
+
+use Chat\HubClient\HubClientConnection;
+
+use SplObjectStorage;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
 class Chat implements MessageComponentInterface
 {
-    /**
-     * The chat repository
-     *
-     * @var ChatRepository
-     */
-    protected $repository;
 
-    /**
-     * Chat Constructor
-     */
+    
+    private $HubClient;
+    
+    
+    /* Chat Constructor */
     public function __construct()
     {
-        $this->repository = new ChatRepository;
+        $this->HubClinet = new SplObjectStorage;
     }
 
     /**
@@ -32,7 +31,6 @@ class Chat implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        $this->repository->addClient($conn);
         echo "got inital connection\n";
     }
 
@@ -45,64 +43,31 @@ class Chat implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $conn, $msg)
     {
+        echo "on Message Chat";
+        
         // Parse the json
         $data = $this->parseMessage($msg);
-        $currClient = $this->repository->getClientByConnection($conn);
+        echo $msg;
         
-        /*client / users */
-        // Distinguish between the actions
-        if ($data->action === "setname")
-        {
-            /*!!!!!!!!!!!!!!!!!!!!!!*/
-            //probably should get a return to see if it changed or not
-            $currClient->setName($data->username);
-            
-            $names = '';
-            //first i have to get all the names
-            foreach ($this->repository->getClients() as $client)
-            {
-                echo $client->getName();
-                $names = $names . $client->getName() . ' ';
-            }
-            
-            echo $names . PHP_EOL ;
-            
-            //then i have to send all the name to each person
-            foreach ($this->repository->getClients() as $client)
-            {
-                $client->sendAllNames($names);
-            }
-            
-            
+        /*
+        Parse the data
+        
+        its also going to divide between server and client
+        */
+        
+        //create server
+        if($data->action == "createServerGetroomkey"){
+            $this->createServer($conn);
         }
-        else if ($data->action === "message")
-        {
-            // We don't want to handle messages if the name isn't set
-            if ($currClient->getName() === "")
-                return;
+        else if($data->action == "setServer"){
+            echo "\nadding user \n";
+            $room = $this->findServer($data->id);
+            $room->addClient($conn, $data->userName);
+        }
+        
+        //$this->HubClinet.onMessage($conn, $data);
 
-            foreach ($this->repository->getClients() as $client)
-            {
-                // Send the message to the clients if, except for the client who sent the message originally
-                if ($currClient->getName() !== $client->getName())
-                    $client->sendMsg($currClient->getName(), $data->msg);
-            }
-        }
-        /*end client / users */
-        
-        /*server client */
-        else if ($data->action === "getroomkey")
-        {
-            foreach ($this->repository->getClients() as $client)
-            {
-                echo "hi \n";
-                echo $client->getName();
-                echo "\n";
-            }
-            $this->repository->setServerClient($conn);
-           echo "got getroomkey message";
-        }
-        /*end server client */
+    
     }
 
     
@@ -125,7 +90,8 @@ class Chat implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
-        $this->repository->removeClient($conn);
+        /*going to have to find all the hubs and do some fun stuff*/
+        //$this->repository->removeClient($conn);
     }
 
     /**
@@ -139,13 +105,30 @@ class Chat implements MessageComponentInterface
     {
         echo "The following error occured: " . $e->getMessage();
 
-        $client = $this->repository->getClientByConnection($conn);
+        //$client = $this->repository->getClientByConnection($conn);
 
         // We want to fully close the connection
+        /*
         if ($client !== null)
         {
             $client->getConnection()->close();
             $this->repository->removeClient($conn);
+        }
+        */
+    }
+    
+    public function createServer(ConnectionInterface $conn){
+        $this->HubClinet->attach(new HubClientConnection($conn));
+    }
+    
+    public function findServer($id){
+        echo "\n find server \n";
+        foreach ($this->HubClinet as $hc)
+        {
+            if($hc->getRoomNumber() == $id){
+                echo "found it \n";
+                return $hc;
+            }
         }
     }
 }

@@ -10,15 +10,12 @@ interface ChatRepositoryInterface
 
     public function getClientByConnection(ConnectionInterface $conn);
 
-    public function addClient(ConnectionInterface $conn);
+    public function addClient(ConnectionInterface $conn, $userName);
 
     public function removeClient(ConnectionInterface $conn);
 
     public function getClients();
     
-    
-    
-    public function setServerClient(ConnectionInterface $conn);
-    
+    public function getNamesOfClients();
 
 }

@@ -12,5 +12,6 @@ use Ratchet\WebSocket\WsServer;
 echo "running \n";
 
 $server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
-
 $server->run();
+
+
