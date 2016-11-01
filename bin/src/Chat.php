@@ -4,7 +4,7 @@ namespace Chat;
 
 
 use Chat\HubClient\HubClientConnection;
-
+use Chat\MySQLC\MySQLC;
 use SplObjectStorage;
 
 use Ratchet\MessageComponentInterface;
@@ -15,12 +15,15 @@ class Chat implements MessageComponentInterface
 
     
     private $HubClient;
-    
+    private $sql;
     
     /* Chat Constructor */
     public function __construct()
     {
         $this->HubClinet = new SplObjectStorage;
+        $this->sql = new MySQLC();
+        
+        
     }
 
     /**
@@ -39,7 +42,7 @@ class Chat implements MessageComponentInterface
      *
      * @param ConnectionInterface $conn
      * @param string              $msg
-     * @return void
+     * @return voidib game
      */
     public function onMessage(ConnectionInterface $conn, $msg)
     {
@@ -63,6 +66,13 @@ class Chat implements MessageComponentInterface
             echo "\nadding user \n";
             $room = $this->findServer($data->id);
             $room->addClient($conn, $data->userName);
+        }
+        else if($data->action == 'question'){
+            $question = $this->sql->getQuestion();
+            print($question);
+            $room = $this->findServerHub($conn);
+            $room->sendQuestion($question);
+            echo "\n question \n ";
         }
         
         //$this->HubClinet.onMessage($conn, $data);
@@ -130,5 +140,18 @@ class Chat implements MessageComponentInterface
                 return $hc;
             }
         }
+    }
+    
+    private function findServerHub(ConnectionInterface $conn){
+        $connection;
+        foreach ($this->HubClinet as $hc)
+        {
+            if($conn == $hc->getConnection())
+            {
+                $connection = $hc;
+                print("\n got it \n");
+            }
+        }
+        return $connection;
     }
 }

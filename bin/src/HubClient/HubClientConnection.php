@@ -43,8 +43,20 @@ class HubClientConnection implements HubClientConnectionInterface
         
     }
     
+    public function sendQuestion($question){
+        $this->connection->send(
+            json_encode([
+                'action' => 'sentQuestion',
+                'success' => true,
+                'text' => $question
+            ])
+        );
+    }
+    
     public function getConnection(){
+      
       echo "getConnection \n";   
+      return $this->connection;
     }
     
     public function onMessage(ConnectionInterface $conn, $msg){

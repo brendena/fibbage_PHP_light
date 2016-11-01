@@ -25,7 +25,6 @@ class ChatRepository implements ChatRepositoryInterface
     */
 
     private $serverClient;
-$server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
 
 
     /**

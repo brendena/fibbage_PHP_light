@@ -20,6 +20,8 @@ var view = (function() {
         status: document.getElementById('status'),
         connectionButton: document.getElementById('connectionButton'),
         serverIdTag: document.getElementById('roomId'),
+        questionText: document.getElementById('questionText'),
+        startButton: document.getElementById('startButton'),
         
         updateStatus: function(status){
             //var keyRoom = Math.random().toString(36).substr(2, 5);
@@ -41,6 +43,9 @@ var view = (function() {
             }
             
         },
+        updateQuestion: function(question){
+            questionText.innerHTML = question;
+        },
         //what a hack
         // i need this but i can't use bind because
         // i'll loose the value's of the event.
@@ -48,8 +53,13 @@ var view = (function() {
             var that = this;
             //setTimeout(that.sendServer.getRoomKey,3000);
             this.connectionButton.addEventListener("click",function(){
-                console.log("click");
+                console.log("connection");
                 that.sendServer.getRoomKey();
+            });
+            
+            this.startButton.addEventListener("click",function(){
+                console.log("started Game");
+                that.sendServer.getQuestion();
             });
             
 

@@ -49,6 +49,9 @@ var Connection = (function() {
             else if(data['action'] == 'listOfNames'){
                 this.view.updateListAllUsers(data['names']);
             }
+            else if(data['action'] == 'sentQuestion'){
+                this.view.updateQuestion(data['text']);
+            }
             
         },
 

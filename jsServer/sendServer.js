@@ -17,11 +17,15 @@ var sendServer = (function() {
             this.socket.send(JSON.stringify({
                 action: 'createServerGetroomkey'
             }));
-
-            
-            
-            console.log("getRoom");
+            console.log("get Room");
+        },
+        getQuestion: function(){
+            this.socket.send(JSON.stringify({
+                action: 'question'
+            }));
+            console.log("get question");
         }
+        
     };
 
     return sendServer;

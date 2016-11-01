@@ -13,4 +13,6 @@ interface HubClientConnectionInterface
     public function onMessage(ConnectionInterface $conn, $msg);
     
     public function addClient(ConnectionInterface $conn, $userName);
+
+    public function sendQuestion($question);
 }

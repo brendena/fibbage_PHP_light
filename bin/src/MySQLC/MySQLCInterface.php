@@ -9,6 +9,7 @@ namespace Chat\MySQLC;
 interface MySQLInterface
 {
     
-    public function getQuestion($topic = "random");
+    public function getQuestion($topic);
 
-?>
+}
+
