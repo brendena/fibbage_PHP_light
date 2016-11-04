@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <title>React Chat</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/server.css">
 </head>
 <body>
+   <ul>
+       <li><p id="status">status -</p></li>
+       <li><a id="connectionButton">connection</a></li>
+       <li><p id="roomId"></p></li>
+       <li><a id="startButton"> start game</a></li>
+       <li><p id="listUsers">Users - </p></li>
+   </ul>
+    
     <div id="preGame">
-        <p id="randomRoomCode"></p>
-        <p id="roomId"> </p>
         <div id="listUsers"></div>
     </div>
-    <button id="connectionButton">click me!! connection</button>
-    <button id="startButton">start Game</button>
+
     <div>
         <h1 id="questionText"></h1>
     </div>
-    <p id="status"></p>
     <script src="jsServer/sendServer.js"></script>
     <script src="jsServer/view.js"></script>
     <script src="jsServer/Connection.js"></script>

@@ -74,7 +74,15 @@ class Chat implements MessageComponentInterface
             $room->sendQuestion($question);
             echo "\n question \n ";
         }
-        
+        else if($data->action == 'questionAnswer'){
+            /*data->id data->questionAnswer*/
+            $room = $this->findServer($data->id);
+            print("\nthis is \n ");
+            print($data->questionAnswer);
+            $room->receiveQuestionAnswer($data->questionAnswer, $conn);
+                
+            
+        }
         //$this->HubClinet.onMessage($conn, $data);
 
     

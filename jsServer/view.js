@@ -24,24 +24,26 @@ var view = (function() {
         startButton: document.getElementById('startButton'),
         
         updateStatus: function(status){
-            //var keyRoom = Math.random().toString(36).substr(2, 5);
-            this.status.innerHTML = "<p>status - " + status + "</p>";
+            this.status.innerHTML = "status - " + status;
         },
 
         updateRandomRoomCode: function(id){
             var roomNumber = 
-            this.serverIdTag.innerHTML = "<p>room id - " + id + "</p>";
+            this.serverIdTag.innerHTML = "room id - " + id;
+            this.connectionButton.style.display = "none";
+            this.startButton.style.display = "block";
+            this.listUsers.style.display = "block";
         },
         
         updateListAllUsers: function(listUsers){
             var arrayUsers = listUsers.split(' ');
             console.log(arrayUsers);
-            this.listUsers.innerHTML = '';
+            concatUserList = 'Users - ';
             
             for(var i = 0; i < arrayUsers.length; i++ ){
-                this.listUsers.innerHTML += "<p>" + arrayUsers[i] + "</p>";
+                concatUserList += " , " + arrayUsers[i];
             }
-            
+            this.listUsers.innerHTML = concatUserList; 
         },
         updateQuestion: function(question){
             questionText.innerHTML = question;
@@ -63,22 +65,6 @@ var view = (function() {
             });
             
 
-            
-            /*
-            this.UserNameInput.addEventListener('keypress', function(evt) {
-                if (evt.keyCode != 13 || this.value == "")
-                    return;
-
-
-                evt.preventDefault();
-                this.style.display = "none";
-                that.sendServer.updateUsername(this.value);
-                that.updateUsername(this.value);
-
-                //first connection
-
-            });
-            */
         }
         
     }

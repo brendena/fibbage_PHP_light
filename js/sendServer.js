@@ -26,7 +26,13 @@ var sendServer = (function() {
                 id: id,
                 userName: userName
             }));
-            
+        },
+        sendQuestionAnswer: function(questionAnswer, serverId){
+            this.socket.send(JSON.stringify({
+                action: 'questionAnswer',
+                id: serverId,
+                questionAnswer: questionAnswer
+            }));
         }
     };
 

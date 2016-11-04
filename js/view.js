@@ -10,6 +10,7 @@ var view = (function() {
     
     function view(socket){
         this.sendServer = new sendServer(socket);
+        this.serverId = "";
         console.log(this.sendServer);
         
     };
@@ -20,12 +21,14 @@ var view = (function() {
         UserNameInput: document.getElementById('username'),
         ServerIdInput: document.getElementById('serverIdInput'),
         SubmitUserButton: document.getElementById('submitUser'),
+        questionInput: document.getElementById("questionInput"),
+        questionButton:document.getElementById("questionButton"),
         
         
         this: this,
 
         updateStatus: function(status){
-            this.status.innerHTML = "<p>status - " + status + "</p>";
+            this.status.innerHTML = "status - " + status + "";
         },
 
         updateUsername: function(username){
@@ -45,30 +48,21 @@ var view = (function() {
         run:  function(){  
             
             var that = this;
-            /*
-            this.UserNameInput.addEventListener('keypress', function(evt) {
-                if (evt.keyCode != 13 || this.value == "")
-                    return;
 
-
-                evt.preventDefault();
-                this.style.display = "none";
-                
-                
-                that.sendServer.updateUsername(this.value);
-                that.updateUsername(this.value);
-
-                //first connection
-
-            });
-            */
             
             this.SubmitUserButton.addEventListener("click",(function(event){
                 console.log(that.ServerIdInput.value);
                 console.log(that.UserNameInput.value);
+                
+                that.serverId = that.ServerIdInput.value;
+                
                 that.sendServer.connectHost(that.ServerIdInput.value,that.UserNameInput.value);
             }));
             
+            this.questionButton.addEventListener("click",(function(event){
+                console.log(that.questionInput.value);
+                that.sendServer.sendQuestionAnswer(that.questionInput.value, that.serverId);
+            }));
             
         }
         

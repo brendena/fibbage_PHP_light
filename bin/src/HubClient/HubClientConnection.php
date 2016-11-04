@@ -10,12 +10,13 @@ class HubClientConnection implements HubClientConnectionInterface
     protected $repository;
     private $connection;
     private $roomNumber;
-    
+    private $answer;
     
     public function __construct(ConnectionInterface $conn)
     {
         $this->repository = new ChatRepository;
         $this->connection = $conn;
+        $this->answer = [];
         
         $this->setRoomNumber();
         echo $this->roomNumber;
@@ -51,6 +52,12 @@ class HubClientConnection implements HubClientConnectionInterface
                 'text' => $question
             ])
         );
+    }
+    
+    public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
+        array_push($this->answer, [$answer, $conn]);
+        echo($answer);
+        echo("\n got question");
     }
     
     public function getConnection(){

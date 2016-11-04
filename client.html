@@ -6,8 +6,10 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-   <h1>client page</h1>
-   
+    <ul>
+       <li><p>Client Page</p></li>
+       <li><p id="status"></p></li>
+    </ul>
     <div id="user">
         <input type="text" id="username" placeholder="Username:">
     </div>
@@ -19,10 +21,15 @@
     
     <button id="submitUser">add name</button>
    
-    <div id="status">status - </div>
+    
     <div id="userName">username - </div>
     <div id="listName"> list of users</div>
     
+    
+    <div>
+        <input type="text" id="questionInput" placeholder="question:">
+        <button id="questionButton">send answer</button>
+    </div>
     <script src="js/sendServer.js"></script>
     <script src="js/view.js"></script>
     <script src="js/Connection.js"></script>
