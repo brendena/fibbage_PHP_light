@@ -31,8 +31,17 @@ class HubClientConnection implements HubClientConnectionInterface
         );
     }
     
-    public function addClient(ConnectionInterface $conn, $useName){
-        $this->repository->addClient($conn,$useName);
+    public function addClient(ConnectionInterface $conn, $userName){
+        $this->repository->addClient($conn,$userName);
+        
+        $conn->send(
+            json_encode([
+                'action' => 'responseAddClient',
+                'success' => true,
+                'userName' => $userName
+            ])
+        );
+        
         
         $this->connection->send(
             json_encode([
@@ -45,6 +54,10 @@ class HubClientConnection implements HubClientConnectionInterface
     }
     
     public function sendQuestion($question){
+        
+        
+        $this->repository->sendQuestion($question);
+        
         $this->connection->send(
             json_encode([
                 'action' => 'sentQuestion',

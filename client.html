@@ -9,27 +9,32 @@
     <ul>
        <li><p>Client Page</p></li>
        <li><p id="status"></p></li>
+       <li><p id="userName"></p></li>
+       <li><p id="listName"></p></li>
+       <li><p id="roomNumber"></p></li>
     </ul>
-    <div id="user">
-        <input type="text" id="username" placeholder="Username:">
-    </div>
+    
+    <div id="container">
+       <div id="center">
+            <div id="setUpSection">
+                username - <input type="text" id="username" placeholder="Username:">
+                server id - <input type="text" id="serverIdInput" placeholder="serverId:">
+                <button id="submitUser">add name</button>
+            </div>
+            <div id="gameSection">
+                <p id="waitMessage">You've submited know wait</p>
+                <div id="questionSection">
 
-   
-    <div id="serverId">
-        <input type="text" id="serverIdInput" placeholder="serverId:">
-    </div>
-    
-    <button id="submitUser">add name</button>
-   
-    
-    <div id="userName">username - </div>
-    <div id="listName"> list of users</div>
-    
-    
-    <div>
-        <input type="text" id="questionInput" placeholder="question:">
-        <button id="questionButton">send answer</button>
-    </div>
+                   <p id="question"></p>
+                    <input type="text" id="questionInput" placeholder="answer:" >
+                    <button id="questionButton" >send answer</button>
+                </div> 
+                <div id="answerSection">
+                </div>
+            </div><!-- end of gameSection -->
+        </div><!-- end of center -->
+    </div><!-- end of container -->
+
     <script src="js/sendServer.js"></script>
     <script src="js/view.js"></script>
     <script src="js/Connection.js"></script>

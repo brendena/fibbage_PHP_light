@@ -122,4 +122,14 @@ class ChatRepository implements ChatRepositoryInterface
         return $listPeople;
     }
 
+    
+    public function sendQuestion($question)
+    {
+        foreach ($this->clients as $client)
+        {
+            $client->sendQuestion($question);
+            
+        }
+     
+    }
 }

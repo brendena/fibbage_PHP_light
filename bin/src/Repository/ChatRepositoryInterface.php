@@ -17,5 +17,7 @@ interface ChatRepositoryInterface
     public function getClients();
     
     public function getNamesOfClients();
+    
+    public function sendQuestion($question);
 
 }

@@ -8,17 +8,25 @@ it has on the view.
 */
 var Connection = (function() {
 
-    function Connection(username, url) {
-        this.socket = new WebSocket("ws://" + url);
-        this.view = new view(this.socket);
-        console.log(this.view);
+    function Connection() {
+        this.url = "127.0.0.1:2000";
+        this.makeSocket();
+        
+        var that = this;
+        this.view = new view(this.socket, this.makeSocket, that);
+        
         this.view.run();
         
         this.currentState = false;
-        this.setupConnectionEvents();
+        
     }
 
     Connection.prototype = {
+        makeSocket: function(){
+            this.socket = new WebSocket("ws://" + this.url);
+            this.setupConnectionEvents();
+        },
+        
         setupConnectionEvents: function() {
             var self = this;
 
@@ -68,4 +76,4 @@ var Connection = (function() {
 })();
 
 
-var conn = new Connection("server", "127.0.0.1:2000");
+var conn = new Connection();

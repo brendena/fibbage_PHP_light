@@ -42,22 +42,20 @@ var Connection = (function() {
             
             
             var data = JSON.parse(evt.data);
-            if (data.action == 'setname') {
-                console.log(data.success);
-                console.log(data);
-                if (data.success)
-                   console.log("all good");
-                else
-                    this.view.updateUsername("Username " + this.username + " has been taken.");
-            } else if (data.action == 'allnames'){
+            console.log(data);
+            if (data.action == 'allnames'){
                 console.log("got message allNames")
                 console.log(data);
                 this.view.updateListAllUsers(data.allnames);
-            } else if (data.action == 'message') {
-                this.addChatMessage(data.username, data.msg);
             } else if (data.action == 'initNames'){
                 console.log("got data\n");
                 console.log(data);
+            }else if (data.action == 'responseAddClient'){
+                console.log('responseAddClient');
+                this.view.updateUserIsAdded(data.userName);
+            }else if (data.action ="sentQuestion"){
+                console.log("got question");
+                this.view.updateQuestion(data.question);
             }
               
         },

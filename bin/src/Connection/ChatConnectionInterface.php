@@ -11,4 +11,6 @@ interface ChatConnectionInterface
     public function setName($name);
 
     public function sendAllNames($names);
+    
+    public function sendQuestion($question);
 }

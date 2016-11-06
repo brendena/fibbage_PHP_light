@@ -23,6 +23,13 @@ var view = (function() {
         SubmitUserButton: document.getElementById('submitUser'),
         questionInput: document.getElementById("questionInput"),
         questionButton:document.getElementById("questionButton"),
+        question: document.getElementById("question"),
+        waitingMessage: document.getElementById("waitMessage"),
+        
+        
+        setUpSection: document.getElementById('setUpSection'),
+        gameSection: document.getElementById('gameSection'),
+        answerSection: document.getElementById('answerSection'),
         
         
         this: this,
@@ -32,21 +39,64 @@ var view = (function() {
         },
 
         updateUsername: function(username){
-            this.userName.innerHTML = "<p>username - " + username + "</p>";
+            this.userName.innerHTML = "username - " + username ;
         },
         updateListAllUsers: function(listUsers){
             var arrayUsers = listUsers.split(' ');
             console.log(arrayUsers);
             this.listName.innerHTML = "";
             for(var i = 0; i < arrayUsers.length - 1; i++ ){
-                this.listName.innerHTML += "<p>" + arrayUsers[i] + "</p>";
+                this.listName.innerHTML +=  arrayUsers[i] + " , ";
             }
+        },
+        updateUserInterfaceStates: function(number){
+            switch(number){
+                //waiting to get a question
+                case 0:
+                    this.setUpSection.style.display = "block";
+                    this.gameSection.style.display = "none";
+                    break;
+                case 1:
+                    this.waitingMessage.style.display = "none";
+                    this.setUpSection.style.display = "none";
+                    this.gameSection.style.display = "block";
+                    this.answerSection.style.display = "none";
+                    break;
+                case 2:
+                    this.waitingMessage.style.display = "block";
+                    this.setUpSection.style.display = "none";
+                    this.gameSection.style.display = "none";
+                    this.answerSection.style.display = "none";
+                    break;
+                case 3:
+                    this.waitingMessage.style.display = "none";
+                    this.setUpSection.style.display = "none";
+                    this.gameSection.style.display = "none";
+                    this.answerSection.style.display = "block";
+                    break;
+                case 4:
+                    this.waitingMessage.style.display = "block";
+                    this.setUpSection.style.display = "none";
+                    this.gameSection.style.display = "none";
+                    this.answerSection.style.display = "none";
+                    break;
+            }
+                    
+            
+        },
+        updateUserIsAdded: function(username){
+            this.updateUsername(username);
+            this.updateUserInterfaceStates(1);
+        },
+        updateQuestion: function(question){
+            this.question.innerHTML = question;
+            this.updateUserInterfaceStates(1);
         },
         //what a hack
         // i need this but i can't use bind because
         // i'll loose the value's of the event.
         run:  function(){  
-            
+            this.updateUserInterfaceStates(0);
             var that = this;
 
             

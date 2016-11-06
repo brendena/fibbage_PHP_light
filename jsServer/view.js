@@ -8,8 +8,11 @@ Thats why it has a sendServer object inside of it.
 var view = (function() {
     
     
-    function view(socket){
+    function view(socket, reConnectSocket,conn){
         this.sendServer = new sendServer(socket);
+        this.a = reConnectSocket.bind(conn);
+        console.log("test");
+        console.log(reConnectSocket);
         console.log(this.sendServer);
         
     };
@@ -62,6 +65,12 @@ var view = (function() {
             this.startButton.addEventListener("click",function(){
                 console.log("started Game");
                 that.sendServer.getQuestion();
+            });
+            
+            this.status.addEventListener("click", function(){
+               console.log("peer clicked");
+                that.a();
+                console.log(that);
             });
             
 
