@@ -47,12 +47,16 @@ var Connection = (function() {
                 console.log("got message allNames")
                 console.log(data);
                 this.view.updateListAllUsers(data.allnames);
+                
             } else if (data.action == 'initNames'){
                 console.log("got data\n");
                 console.log(data);
+                
             }else if (data.action == 'responseAddClient'){
                 console.log('responseAddClient');
-                this.view.updateUserIsAdded(data.userName);
+                if(data.success == true){
+                    this.view.updateUserIsAdded(data.userName);
+                }
             }else if (data.action ="sentQuestion"){
                 console.log("got question");
                 this.view.updateQuestion(data.question);

@@ -15,6 +15,8 @@ var view = (function() {
         
     };
     view.prototype = {
+        /* probable don't need all these id anymore with the 
+           Since i section off main parts.                */
         status: document.getElementById('status'),
         userName: document.getElementById('userName'),
         listName: document.getElementById('listName'),
@@ -24,12 +26,13 @@ var view = (function() {
         questionInput: document.getElementById("questionInput"),
         questionButton:document.getElementById("questionButton"),
         question: document.getElementById("question"),
+        
+        
         waitingMessage: document.getElementById("waitMessage"),
-        
-        
         setUpSection: document.getElementById('setUpSection'),
         gameSection: document.getElementById('gameSection'),
         answerSection: document.getElementById('answerSection'),
+        questionSection: document.getElementById('questionSection'),
         
         
         this: this,
@@ -49,37 +52,39 @@ var view = (function() {
                 this.listName.innerHTML +=  arrayUsers[i] + " , ";
             }
         },
+        
         updateUserInterfaceStates: function(number){
             switch(number){
-                //waiting to get a question
+                //inputing message
                 case 0:
                     this.setUpSection.style.display = "block";
                     this.gameSection.style.display = "none";
                     break;
+                //waiting for others
                 case 1:
+                    this.waitingMessage.style.display = "block";
+                    this.setUpSection.style.display = "none";
+                    this.gameSection.style.display = "block";
+                    this.answerSection.style.display = "none";
+                    this.questionSection.style.display = "none";
+                    break;
+                //input question answer
+                case 2:
                     this.waitingMessage.style.display = "none";
                     this.setUpSection.style.display = "none";
                     this.gameSection.style.display = "block";
                     this.answerSection.style.display = "none";
+                    this.questionSection.style.display = "block";
                     break;
-                case 2:
-                    this.waitingMessage.style.display = "block";
-                    this.setUpSection.style.display = "none";
-                    this.gameSection.style.display = "none";
-                    this.answerSection.style.display = "none";
-                    break;
+                //select answer
                 case 3:
                     this.waitingMessage.style.display = "none";
                     this.setUpSection.style.display = "none";
-                    this.gameSection.style.display = "none";
+                    this.gameSection.style.display = "block";
                     this.answerSection.style.display = "block";
+                    this.questionSection.style.display = "none";
                     break;
-                case 4:
-                    this.waitingMessage.style.display = "block";
-                    this.setUpSection.style.display = "none";
-                    this.gameSection.style.display = "none";
-                    this.answerSection.style.display = "none";
-                    break;
+
             }
                     
             
@@ -90,7 +95,7 @@ var view = (function() {
         },
         updateQuestion: function(question){
             this.question.innerHTML = question;
-            this.updateUserInterfaceStates(1);
+            this.updateUserInterfaceStates(2);
         },
         //what a hack
         // i need this but i can't use bind because

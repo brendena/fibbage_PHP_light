@@ -19,11 +19,11 @@ var sendServer = (function() {
             }));
             console.log("get Room");
         },
-        getQuestion: function(){
+        startGame: function(){
             this.socket.send(JSON.stringify({
-                action: 'question'
+                action: 'startGame'
             }));
-            console.log("get question");
+            console.log("start game");
         }
         
     };

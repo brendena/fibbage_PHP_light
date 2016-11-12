@@ -67,7 +67,7 @@ class Chat implements MessageComponentInterface
             $room = $this->findServer($data->id);
             $room->addClient($conn, $data->userName);
         }
-        else if($data->action == 'question'){
+        else if($data->action == 'startGame'){
             $question = $this->sql->getQuestion();
             print($question);
             $room = $this->findServerHub($conn);

@@ -64,7 +64,7 @@ var view = (function() {
             
             this.startButton.addEventListener("click",function(){
                 console.log("started Game");
-                that.sendServer.getQuestion();
+                that.sendServer.startGame();
             });
             
             this.status.addEventListener("click", function(){

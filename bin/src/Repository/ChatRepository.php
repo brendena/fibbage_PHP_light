@@ -78,7 +78,13 @@ class ChatRepository implements ChatRepositoryInterface
      */
     public function addClient(ConnectionInterface $conn, $userName)
     {
-        $this->clients->attach(new ChatConnection($conn, $this, $userName));
+        if($this->getClientByName($userName) == null){
+            echo "1 \n";
+            $this->clients->attach(new ChatConnection($conn, $this, $userName));
+            return true;
+        }
+        echo "0\n";
+        return null;
     }
 
     /**

@@ -32,24 +32,38 @@ class HubClientConnection implements HubClientConnectionInterface
     }
     
     public function addClient(ConnectionInterface $conn, $userName){
-        $this->repository->addClient($conn,$userName);
         
-        $conn->send(
-            json_encode([
-                'action' => 'responseAddClient',
-                'success' => true,
-                'userName' => $userName
-            ])
-        );
+        if($this->repository->addClient($conn,$userName) == true){
+            $conn->send(
+                json_encode([
+                    'action' => 'responseAddClient',
+                    'success' => true,
+                    'userName' => $userName
+                ])
+            );
+            //updating the server with user names
+            $this->connection->send(
+                json_encode([
+                    'action' => 'listOfNames',
+                    'success' => true,
+                    'names' => $this->repository->getNamesOfClients()
+                ])
+            );
+        }
+        else{
+            $conn->send(
+                json_encode([
+                    'action' => 'responseAddClient',
+                    'success' => false,
+                    'userName' => $userName
+                ])
+            );
+        }
+        
+
         
         
-        $this->connection->send(
-            json_encode([
-                'action' => 'listOfNames',
-                'success' => true,
-                'names' => $this->repository->getNamesOfClients()
-            ])
-        );
+
         
     }
     
@@ -70,7 +84,7 @@ class HubClientConnection implements HubClientConnectionInterface
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
         array_push($this->answer, [$answer, $conn]);
         echo($answer);
-        echo("\n got question");
+        echo("\n got question answer");
     }
     
     public function getConnection(){
