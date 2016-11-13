@@ -128,4 +128,11 @@ class ChatConnection implements ChatConnectionInterface
            'question' => $question
         ]);
     }
+    public function sendAnswers($answers){
+        $this->send([
+           'action' => 'sentAnswer',
+           'success' => true,
+           'answers' => $answers
+        ]);
+    }
 }

@@ -33,6 +33,13 @@ var sendServer = (function() {
                 id: serverId,
                 questionAnswer: questionAnswer
             }));
+        },
+        sendAnswerListAnswer: function(answerListAnswer, serverId){
+            this.socket.send(JSON.stringify({
+                action: 'answerListAnswer',
+                id: serverId,
+                answerListAnswer: answerListAnswer
+            }));
         }
     };
 

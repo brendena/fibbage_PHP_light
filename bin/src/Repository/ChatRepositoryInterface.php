@@ -18,6 +18,10 @@ interface ChatRepositoryInterface
     
     public function getNamesOfClients();
     
+    public function getCount();
+    
     public function sendQuestion($question);
+    
+    public function sendAnswers($answers);
 
 }

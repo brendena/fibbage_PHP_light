@@ -57,9 +57,15 @@ var Connection = (function() {
                 if(data.success == true){
                     this.view.updateUserIsAdded(data.userName);
                 }
-            }else if (data.action ="sentQuestion"){
+            }else if (data.action == "sentQuestion"){
                 console.log("got question");
                 this.view.updateQuestion(data.question);
+            }else if (data.action == "receivedQuestionAnswer"){
+                console.log("got Question Answer");
+                this.view.updateGotQuestionAnswer();
+            }else if (data.action == "sentAnswer"){
+                console.log("got answer");
+                this.view.updateListAnswers(data.answers);
             }
               
         },

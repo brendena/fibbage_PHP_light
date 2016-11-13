@@ -20,11 +20,6 @@ class ChatRepository implements ChatRepositoryInterface
     */
     private $clients;
     
-    /*
-    but only the serverClient display all the information and stuff
-    */
-
-    private $serverClient;
 
 
     /**
@@ -136,6 +131,19 @@ class ChatRepository implements ChatRepositoryInterface
             $client->sendQuestion($question);
             
         }
-     
+    }
+    
+    public function sendAnswers($answers)
+    {
+        foreach ($this->clients as $client)
+        {
+            $client->sendAnswers($answers);
+            
+        }
+    }
+    
+    
+    public function getCount(){
+        return $this->clients->count();
     }
 }

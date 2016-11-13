@@ -52,6 +52,28 @@ var view = (function() {
                 this.listName.innerHTML +=  arrayUsers[i] + " , ";
             }
         },
+        updateGotQuestionAnswer: function(){
+            console.log("updated to waiting");
+            this.updateUserInterfaceStates(1);
+        },
+        updateListAnswers: function(answers){
+            console.log(answers);
+            console.log("updating list");
+            
+            for(var i = 0; i < answers.length; i++ ){
+                this.answerSection.innerHTML += "<button class='answerButton'>" + answers[i] + " </button> ";
+            }
+            var buttons = document.getElementsByClassName("answerButton");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', this.answerSubmit, false);
+            }
+            
+            
+            this.updateUserInterfaceStates(1);
+        },
+        answerSubmit: function(){
+            console.log(this.innerHTML);
+        },
         
         updateUserInterfaceStates: function(number){
             switch(number){
@@ -125,4 +147,4 @@ var view = (function() {
 
     return view;
 })();
-
+console.log()

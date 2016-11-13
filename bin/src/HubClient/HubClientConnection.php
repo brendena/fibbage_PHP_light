@@ -30,7 +30,7 @@ class HubClientConnection implements HubClientConnectionInterface
             )
         );
     }
-    
+
     public function addClient(ConnectionInterface $conn, $userName){
         
         if($this->repository->addClient($conn,$userName) == true){
@@ -82,9 +82,37 @@ class HubClientConnection implements HubClientConnectionInterface
     }
     
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
-        array_push($this->answer, [$answer, $conn]);
-        echo($answer);
-        echo("\n got question answer");
+        echo "recieved question \n\n\n";
+        $i = 0;
+        for($i; $i < count($this->answer) &&  $i == -1; $i++){
+            if($this->answer[$i][1] == $conn){
+                echo "you've already submitted";
+                $i = -1;
+            }
+        }
+        if($i != -1){
+            array_push($this->answer, [$answer, $conn]);
+        }
+        $conn->send(
+            json_encode([
+                'action' => 'receivedQuestionAnswer',
+                'success' => true
+            ])
+        );
+        
+        if($this->checkEverbodyAnswered()){
+            $justAnswers = [];
+            echo "count \n";
+            echo count($this->answer);
+            $i = 0;
+            for($i;  $i < count($this->answer); $i++){
+                echo "went through";
+                array_push($justAnswers, $this->answer[$i][0]);
+            }
+            echo $justAnswers;
+            $this->repository->sendAnswers($justAnswers);
+            
+        }
     }
     
     public function getConnection(){
@@ -103,5 +131,13 @@ class HubClientConnection implements HubClientConnectionInterface
     
     private function setRoomNumber(){
         $this->roomNumber = mt_rand();
+    }
+    
+    private function checkEverbodyAnswered(){
+        $i = 0;
+        if(count($this->answer) == $this->repository->getCount()){
+            $i = 1;
+        }
+        return $i;
     }
 }
