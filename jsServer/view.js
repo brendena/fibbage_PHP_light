@@ -23,7 +23,7 @@ var view = (function() {
         status: document.getElementById('status'),
         connectionButton: document.getElementById('connectionButton'),
         serverIdTag: document.getElementById('roomId'),
-        questionText: document.getElementById('questionText'),
+        displayText: document.getElementById('displayText'),
         startButton: document.getElementById('startButton'),
         
         updateStatus: function(status){
@@ -31,7 +31,6 @@ var view = (function() {
         },
 
         updateRandomRoomCode: function(id){
-            var roomNumber = 
             this.serverIdTag.innerHTML = "room id - " + id;
             this.connectionButton.style.display = "none";
             this.startButton.style.display = "block";
@@ -49,8 +48,16 @@ var view = (function() {
             this.listUsers.innerHTML = concatUserList; 
         },
         updateQuestion: function(question){
-            questionText.innerHTML = question;
+            this.displayText.innerHTML = "<p>" + question + "</p>";
         },
+        updateListAnswers: function(answers){
+            concatAnswerList = "";
+            for(var i = 0; i < answers.length; i++ ){
+                concatAnswerList += " <p class='answers'> " + answers[i] +  "</p>";
+            }
+            this.displayText.innerHTML = concatAnswerList;
+        },
+        
         //what a hack
         // i need this but i can't use bind because
         // i'll loose the value's of the event.

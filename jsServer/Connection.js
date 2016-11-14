@@ -43,7 +43,7 @@ var Connection = (function() {
 
         connectionMessage: function(evt) {
             console.log("recived message");
-            //console.log(evt);
+            console.log(evt);
             if (!this.open)
                 return;
             
@@ -59,6 +59,10 @@ var Connection = (function() {
             }
             else if(data['action'] == 'sentQuestion'){
                 this.view.updateQuestion(data['text']);
+            }
+            else if(data['action'] == 'sendAnswers'){
+                console.log("got answers");
+                this.view.updateListAnswers(data["answers"]);
             }
             
         },

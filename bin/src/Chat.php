@@ -83,7 +83,7 @@ class Chat implements MessageComponentInterface
                 
             
         }
-        else if(data->action == 'answerListAnswer'){
+        else if($data->action == 'answerListAnswer'){
             print("received - answerListAnswer");
         }
         //$this->HubClinet.onMessage($conn, $data);

@@ -102,16 +102,16 @@ class HubClientConnection implements HubClientConnectionInterface
         
         if($this->checkEverbodyAnswered()){
             $justAnswers = [];
-            echo "count \n";
-            echo count($this->answer);
             $i = 0;
             for($i;  $i < count($this->answer); $i++){
                 echo "went through";
                 array_push($justAnswers, $this->answer[$i][0]);
             }
-            echo $justAnswers;
+            
             $this->repository->sendAnswers($justAnswers);
             
+            /* also need answer*/
+            $this->sendServerAnswers($justAnswers);
         }
     }
     
@@ -139,5 +139,15 @@ class HubClientConnection implements HubClientConnectionInterface
             $i = 1;
         }
         return $i;
+    }
+    
+    private function sendServerAnswers($listAnswers){
+         $this->connection->send(
+            json_encode([
+                'action' => 'sendAnswers',
+                'success' => true,
+                'answers' => $listAnswers
+            ])
+        );
     }
 }
