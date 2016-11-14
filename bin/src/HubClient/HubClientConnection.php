@@ -10,13 +10,17 @@ class HubClientConnection implements HubClientConnectionInterface
     protected $repository;
     private $connection;
     private $roomNumber;
-    private $answer;
+    private $question; //officalQuestion
+    private $answer; // officalAnswer
+    private $answerList;
+    private $clientFinalAnswersList;
     
     public function __construct(ConnectionInterface $conn)
     {
         $this->repository = new ChatRepository;
         $this->connection = $conn;
-        $this->answer = [];
+        $this->answer = array();
+        $this->answerConn = array();
         
         $this->setRoomNumber();
         echo $this->roomNumber;
@@ -67,7 +71,9 @@ class HubClientConnection implements HubClientConnectionInterface
         
     }
     
-    public function sendQuestion($question){
+    public function sendQuestionAndAnswer($question, $answer){
+        $this->question = $question;
+        $this->answer = $answer;
         
         
         $this->repository->sendQuestion($question);
@@ -84,15 +90,21 @@ class HubClientConnection implements HubClientConnectionInterface
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
         echo "recieved question \n\n\n";
         $i = 0;
-        for($i; $i < count($this->answer) &&  $i == -1; $i++){
-            if($this->answer[$i][1] == $conn){
+        
+        
+        
+        for($i; $i < count($this->answerList) &&  $i == -1; $i++){
+            if($this->answerList[$i][1] == $conn){
                 echo "you've already submitted";
                 $i = -1;
             }
         }
+        
         if($i != -1){
-            array_push($this->answer, [$answer, $conn]);
+            $this->answerList[] = [$answer, $conn];
         }
+        
+        
         $conn->send(
             json_encode([
                 'action' => 'receivedQuestionAnswer',
@@ -100,20 +112,54 @@ class HubClientConnection implements HubClientConnectionInterface
             ])
         );
         
-        if($this->checkEverbodyAnswered()){
+        if($this->checkEverbodyAnswered($this->answerList)){
             $justAnswers = [];
             $i = 0;
-            for($i;  $i < count($this->answer); $i++){
-                echo "went through";
-                array_push($justAnswers, $this->answer[$i][0]);
+            for($i;  $i < count($this->answerList); $i++){
+                echo "went through\n";
+                array_push($justAnswers, $this->answerList[$i][0]);
             }
+            
+            $justAnswers[] = $this->answer;
+            
+            shuffle($justAnswers);
             
             $this->repository->sendAnswers($justAnswers);
             
-            /* also need answer*/
+            // also need answer
             $this->sendServerAnswers($justAnswers);
         }
+        
     }
+    
+    public function receivedFinalAnswer($answer,ConnectionInterface $conn){
+        echo "recieved question \n\n\n";
+        $i = 0;
+        
+        for($i; $i < count($this->clientFinalAnswersList) &&  $i == -1; $i++){
+            if($this->clientFinalAnswersList[$i][1] == $conn){
+                echo "you've already submitted";
+                $i = -1;
+            }
+        }
+        
+        if($i != -1){
+            $this->clientFinalAnswersList[] = [$answer, $conn];
+        }
+        
+        
+        $conn->send(
+            json_encode([
+                'action' => 'receivedFinalAnswer',
+                'success' => true
+            ])
+        );
+        
+        if($this->checkEverbodyAnswered($this->clientFinalAnswersList)){
+
+        }
+    }
+    
     
     public function getConnection(){
       
@@ -133,9 +179,9 @@ class HubClientConnection implements HubClientConnectionInterface
         $this->roomNumber = mt_rand();
     }
     
-    private function checkEverbodyAnswered(){
+    private function checkEverbodyAnswered($list){
         $i = 0;
-        if(count($this->answer) == $this->repository->getCount()){
+        if(count($list) == $this->repository->getCount()){
             $i = 1;
         }
         return $i;

@@ -56,6 +56,9 @@ var view = (function() {
             console.log("updated to waiting");
             this.updateUserInterfaceStates(1);
         },
+        updateGotFinalAnswer:function(){
+          this.updateUserInterfaceStates(1);  
+        },
         updateListAnswers: function(answers){
             console.log(answers);
             console.log("updating list");
@@ -64,15 +67,18 @@ var view = (function() {
                 this.answerSection.innerHTML += "<button class='answerButton'>" + answers[i] + " </button> ";
             }
             var buttons = document.getElementsByClassName("answerButton");
+            
+            
             for (var i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', this.answerSubmit, false);
+                buttons[i].addEventListener('click', this.answerSubmit.bind(this), false);
             }
             
             
-            this.updateUserInterfaceStates(1);
+            this.updateUserInterfaceStates(3);
         },
-        answerSubmit: function(){
-            console.log(this.innerHTML);
+        answerSubmit: function(event){
+            console.log(event);
+            this.sendServer.sendFinalAnswer(event.innerHTML ,this.serverId)
         },
         
         updateUserInterfaceStates: function(number){

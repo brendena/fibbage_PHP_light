@@ -58,6 +58,13 @@ class Chat implements MessageComponentInterface
         its also going to divide between server and client
         */
         
+        
+        /*
+        
+        TODO
+        i should divide these section between client and server
+        
+        */
         //create server
         if($data->action == "createServerGetroomkey"){
             $this->createServer($conn);
@@ -68,10 +75,9 @@ class Chat implements MessageComponentInterface
             $room->addClient($conn, $data->userName);
         }
         else if($data->action == 'startGame'){
-            $question = $this->sql->getQuestion();
-            print($question);
+            $questionAnswer = $this->sql->getQuestionAndAnswer();
             $room = $this->findServerHub($conn);
-            $room->sendQuestion($question);
+            $room->sendQuestionAndAnswer($questionAnswer[0], $questionAnswer[1]);
             echo "\n question \n ";
         }
         else if($data->action == 'questionAnswer'){
@@ -80,13 +86,12 @@ class Chat implements MessageComponentInterface
             print("\n this is \n ");
             print($data->questionAnswer);
             $room->receiveQuestionAnswer($data->questionAnswer, $conn);
-                
-            
         }
-        else if($data->action == 'answerListAnswer'){
-            print("received - answerListAnswer");
+        else if($data->action == 'finalAnswer'){
+            echo "final Answer\n";
+            $room = $this->findServer($data->id);
+            $room->receivedFinalAnswer($data->finalAnswer, $conn);
         }
-        //$this->HubClinet.onMessage($conn, $data);
 
     
     }
@@ -142,7 +147,7 @@ class Chat implements MessageComponentInterface
         $this->HubClinet->attach(new HubClientConnection($conn));
     }
     
-    public function findServer($id){
+    private function findServer($id){
         echo "\n find server \n";
         foreach ($this->HubClinet as $hc)
         {

@@ -34,15 +34,18 @@ class MySQLC
        
     }
 
-   public function getQuestion($topic = "question"){
-       $query= "Select question from Question";
+   public function getQuestionAndAnswer($topic = "question"){
+       $query= "Select question, answer from Question";
        $result = mysqli_query($this->link, $query);
-       
+
        while($row = mysqli_fetch_array($result))
        {
            print($row['question']);
            print("\n");
-           return($row['question']);
+           print($row['answer']);
+           print("\n");
+           
+           return([ $row['question'], $row['answer'] ]);
        }
        #mysqli_close($this->link);
    }

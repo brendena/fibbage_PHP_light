@@ -19,7 +19,6 @@ var sendServer = (function() {
                     username: name
             }));
         },
-        
         connectHost: function(id, userName){
             this.socket.send(JSON.stringify({
                 action: 'setServer',
@@ -39,6 +38,13 @@ var sendServer = (function() {
                 action: 'answerListAnswer',
                 id: serverId,
                 answerListAnswer: answerListAnswer
+            }));
+        },
+        sendFinalAnswer: function(finalAnswer, serverId){
+            this.socket.send(JSON.stringify({
+                action: 'finalAnswer',
+                id: serverId,
+                finalAnswer: finalAnswer
             }));
         }
     };

@@ -35,7 +35,6 @@ var Connection = (function() {
 
         connectionMessage: function(evt) {
             console.log("recived message");
-            //console.log(evt);
             if (!this.open)
                 return;
             
@@ -43,29 +42,27 @@ var Connection = (function() {
             
             var data = JSON.parse(evt.data);
             console.log(data);
+            console.log("got" + data.action);
             if (data.action == 'allnames'){
                 console.log("got message allNames")
                 console.log(data);
                 this.view.updateListAllUsers(data.allnames);
                 
             } else if (data.action == 'initNames'){
-                console.log("got data\n");
                 console.log(data);
                 
             }else if (data.action == 'responseAddClient'){
-                console.log('responseAddClient');
                 if(data.success == true){
                     this.view.updateUserIsAdded(data.userName);
                 }
             }else if (data.action == "sentQuestion"){
-                console.log("got question");
                 this.view.updateQuestion(data.question);
             }else if (data.action == "receivedQuestionAnswer"){
-                console.log("got Question Answer");
                 this.view.updateGotQuestionAnswer();
             }else if (data.action == "sentAnswer"){
-                console.log("got answer");
                 this.view.updateListAnswers(data.answers);
+            }else if(data.action == "receivedFinalAnswer"){
+                this.view.updateGotFinalAnswer();
             }
               
         },

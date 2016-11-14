@@ -9,7 +9,7 @@ namespace Chat\MySQLC;
 interface MySQLInterface
 {
     
-    public function getQuestion($topic);
+    public function getQuestionAndAnswer($topic);
 
 }
 
