@@ -12,56 +12,40 @@ class HubClientConnection implements HubClientConnectionInterface
     private $roomNumber;
     private $question; //officalQuestion
     private $answer; // officalAnswer
-    private $answerList;
+    private $answerList; //
     private $clientFinalAnswersList;
+    private $pointsAwarded;
     
     public function __construct(ConnectionInterface $conn)
     {
         $this->repository = new ChatRepository;
         $this->connection = $conn;
-        $this->answer = array();
-        $this->answerConn = array();
+        $this->answer = [];
+        $this->answerConn = [];
+        $this->pointsAwarded = 200;
         
         $this->setRoomNumber();
         echo $this->roomNumber;
         
-        $this->connection->send(
-            json_encode([
-                    'action'   => 'roomcode',
-                    'success'  => true,
-                    'roomCode' => $this->roomNumber
-                ]
-            )
-        );
+        $this->connection->send($this->jEncode('roomcode', $this->roomNumber));
     }
 
     public function addClient(ConnectionInterface $conn, $userName){
         
         if($this->repository->addClient($conn,$userName) == true){
-            $conn->send(
-                json_encode([
-                    'action' => 'responseAddClient',
-                    'success' => true,
-                    'userName' => $userName
-                ])
-            );
+            //update 
+            $conn->send($this->jEncode('responseAddClient', $userName));
+            
             //updating the server with user names
-            $this->connection->send(
-                json_encode([
-                    'action' => 'listOfNames',
-                    'success' => true,
-                    'names' => $this->repository->getNamesOfClients()
-                ])
-            );
+            $this->connection->send($this->jEncode('listOfNames', 
+                                                   $this->repository->getNamesOfClients()
+                                                   )
+                                   );
+            
         }
         else{
-            $conn->send(
-                json_encode([
-                    'action' => 'responseAddClient',
-                    'success' => false,
-                    'userName' => $userName
-                ])
-            );
+            echo "error: the name has already been taken \n";
+            $conn->send($this->jEncode('responseAddClient', $userName, false));
         }
         
 
@@ -70,21 +54,17 @@ class HubClientConnection implements HubClientConnectionInterface
 
         
     }
-    
+    //Start of game
     public function sendQuestionAndAnswer($question, $answer){
+        $this->resetVariables();
+        
         $this->question = $question;
         $this->answer = $answer;
         
         
-        $this->repository->sendQuestion($question);
+        $this->repository->sendAllClientsRequest($this->jEncode("sentQuestion", $question));
         
-        $this->connection->send(
-            json_encode([
-                'action' => 'sentQuestion',
-                'success' => true,
-                'text' => $question
-            ])
-        );
+        $this->connection->send($this->jEncode('sentQuestion', $question));
     }
     
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
@@ -105,18 +85,13 @@ class HubClientConnection implements HubClientConnectionInterface
         }
         
         
-        $conn->send(
-            json_encode([
-                'action' => 'receivedQuestionAnswer',
-                'success' => true
-            ])
-        );
+        $conn->send( $this->jEncode('receivedQuestionAnswer', ""));
+
         
         if($this->checkEverbodyAnswered($this->answerList)){
             $justAnswers = [];
             $i = 0;
             for($i;  $i < count($this->answerList); $i++){
-                echo "went through\n";
                 array_push($justAnswers, $this->answerList[$i][0]);
             }
             
@@ -124,10 +99,9 @@ class HubClientConnection implements HubClientConnectionInterface
             
             shuffle($justAnswers);
             
-            $this->repository->sendAnswers($justAnswers);
+            $this->repository->sendAllClientsRequest($this->jEncode('sentAnswer', $justAnswers));
             
-            // also need answer
-            $this->sendServerAnswers($justAnswers);
+            $this->connection->send($this->jEncode('sendAnswers', $justAnswers));
         }
         
     }
@@ -148,16 +122,13 @@ class HubClientConnection implements HubClientConnectionInterface
         }
         
         
-        $conn->send(
-            json_encode([
-                'action' => 'receivedFinalAnswer',
-                'success' => true
-            ])
-        );
+        $conn->send($this->jEncode('receivedFinalAnswer', ""));
         
         if($this->checkEverbodyAnswered($this->clientFinalAnswersList)){
-
+            $this->submitEndOfGameResults();
         }
+        
+        //i could do a return to bring the values back
     }
     
     
@@ -167,12 +138,61 @@ class HubClientConnection implements HubClientConnectionInterface
       return $this->connection;
     }
     
+
+    
     public function onMessage(ConnectionInterface $conn, $msg){
         echo "got message";
     }
 
     public function getRoomNumber(){
         return $this->roomNumber;
+    }
+    
+    private function submitEndOfGameResults(){
+        /*
+        So i need to get all the name 
+        
+        
+        [[Answer1,UserWhoSubmitedIt, jim asdf],[Answer2,UserWhoSubmitedIt, asdfasdf], [Answer3, "NONE"]]
+        */
+        $results = [];
+        $returnEndResults = [];
+        for($i = 0; $i < count($this->answerList); $i++){
+            $results[] = $this->answerList[$i][0];
+            $results[] = $this->repository->getClientByConnection($this->answerList[$i][1])->getName();
+            for($j = 0; $j < count($this->clientFinalAnswersList); $j++){
+                /*there was a problem where the answerList answer were one character less then  clientFinalAnswersList
+                 but they look exactly the same when you ouputed them
+                */
+                if($this->answerList[$i][0] == substr($this->clientFinalAnswersList[$j][0],0, -1)){
+                    $results[] = $this->repository->getClientByConnection($this->clientFinalAnswersList[$j][1])->getName();
+                }
+            }
+            $returnEndResults[] = $results;
+            $results= [];
+            
+        }
+        
+        $correctUser = [];
+        for($j = 0; $j < count($this->clientFinalAnswersList); $j++){
+            if($this->answer == substr($this->clientFinalAnswersList[$j][0],0, -1)){
+                $correctUser[] = $this->repository->getClientByConnection($this->clientFinalAnswersList[$j][1])->getName();
+            }
+        }
+        
+        
+        $this->connection->send(
+            json_encode([
+                'action' => 'endOfGameResults',
+                'success' => true,
+                'question' => $this->question,
+                'answer' => $this->answer,
+                'correctUsers' => $correctUser,
+                'endResults' => $returnEndResults
+            ])
+        );
+        
+        
     }
     
     private function setRoomNumber(){
@@ -187,13 +207,21 @@ class HubClientConnection implements HubClientConnectionInterface
         return $i;
     }
     
-    private function sendServerAnswers($listAnswers){
-         $this->connection->send(
-            json_encode([
-                'action' => 'sendAnswers',
-                'success' => true,
-                'answers' => $listAnswers
-            ])
-        );
+
+    private function resetVariables(){
+        $this->answerList = [];
+        $this->clientFinalAnswersList = [];
     }
+    
+    private function jEncode($action, $response, $success = true){
+        $var = json_encode([
+            'action' => $action,
+            'success' => $success,
+            'response' => $response
+        ]);
+        
+        return $var;
+        
+    }
+    
 }

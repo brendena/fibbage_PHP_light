@@ -62,7 +62,7 @@ var view = (function() {
         updateListAnswers: function(answers){
             console.log(answers);
             console.log("updating list");
-            
+            this.answerSection.innerHTML = "";
             for(var i = 0; i < answers.length; i++ ){
                 this.answerSection.innerHTML += "<button class='answerButton'>" + answers[i] + " </button> ";
             }
@@ -78,7 +78,8 @@ var view = (function() {
         },
         answerSubmit: function(event){
             console.log(event);
-            this.sendServer.sendFinalAnswer(event.innerHTML ,this.serverId)
+            console.log(event.target.innerHTML);
+            this.sendServer.sendFinalAnswer(event.target.innerHTML ,this.serverId)
         },
         
         updateUserInterfaceStates: function(number){

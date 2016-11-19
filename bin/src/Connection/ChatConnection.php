@@ -119,20 +119,10 @@ class ChatConnection implements ChatConnectionInterface
     {
         $this->connection->send(json_encode($data));
     }
+
     
-    public function sendQuestion($question)
-    {
-        $this->send([
-           'action' => 'sentQuestion',
-           'success' => true,
-           'question' => $question
-        ]);
+    public function sendRequest($jsonRequest){
+        $this->connection->send($jsonRequest);
     }
-    public function sendAnswers($answers){
-        $this->send([
-           'action' => 'sentAnswer',
-           'success' => true,
-           'answers' => $answers
-        ]);
-    }
+    
 }

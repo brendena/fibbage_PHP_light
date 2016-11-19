@@ -52,17 +52,21 @@ var Connection = (function() {
             var data = JSON.parse(evt.data);
             console.log(data);
             if(data['action'] == 'roomcode'){
-                this.view.updateRandomRoomCode(data['roomCode']);
+                this.view.updateRandomRoomCode(data['response']);
             }
             else if(data['action'] == 'listOfNames'){
-                this.view.updateListAllUsers(data['names']);
+                this.view.updateListAllUsers(data['response']);
             }
             else if(data['action'] == 'sentQuestion'){
-                this.view.updateQuestion(data['text']);
+                this.view.updateQuestion(data['response']);
             }
             else if(data['action'] == 'sendAnswers'){
                 console.log("got answers");
-                this.view.updateListAnswers(data["answers"]);
+                this.view.updateListAnswers(data["response"]);
+            }
+            else if(data['action'] == 'endOfGameResults'){
+                console.log("end of game received");
+                this.view.updateEndOfGameResults(data['question'], data['answer']);
             }
             
         },

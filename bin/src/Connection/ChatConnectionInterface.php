@@ -12,7 +12,6 @@ interface ChatConnectionInterface
 
     public function sendAllNames($names);
     
-    public function sendQuestion($question);
     
-    public function sendAnswers($answers);
+    public function sendRequest($jsonRequest);
 }

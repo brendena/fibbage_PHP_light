@@ -122,26 +122,22 @@ class ChatRepository implements ChatRepositoryInterface
         
         return $listPeople;
     }
+    /*
+    public function sendRequest($jsonObject)
+    {
+        
+    }
+    */
+    
+    public function sendAllClientsRequest($request)
+    {
+        foreach ($this->clients as $client)
+        {
+            $client->sendRequest($request);
+            
+        }
+    }
 
-    
-    public function sendQuestion($question)
-    {
-        foreach ($this->clients as $client)
-        {
-            $client->sendQuestion($question);
-            
-        }
-    }
-    
-    public function sendAnswers($answers)
-    {
-        foreach ($this->clients as $client)
-        {
-            $client->sendAnswers($answers);
-            
-        }
-    }
-    
     
     public function getCount(){
         return $this->clients->count();

@@ -34,7 +34,7 @@ class Chat implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        echo "got inital connection\n";
+        echo "Connected to a client\n";
     }
 
     /**
@@ -46,52 +46,49 @@ class Chat implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $conn, $msg)
     {
-        echo "on Message Chat";
         
         // Parse the json
         $data = $this->parseMessage($msg);
-        echo $msg;
-        
-        /*
-        Parse the data
-        
-        its also going to divide between server and client
-        */
+        echo "\n\n onMessage action: " . $data ->action . "\n";
+
         
         
-        /*
         
-        TODO
-        i should divide these section between client and server
-        
-        */
-        //create server
-        if($data->action == "createServerGetroomkey"){
-            $this->createServer($conn);
+        //command for client
+        if($data->action == 'questionAnswer' || $data->action == 'finalAnswer' || $data->action == 'setServer'){
+            echo "client \n";
+            
+            if($data->action == "setServer"){
+                $room = $this->findServer($data->id);
+                $room->addClient($conn, $data->userName);
+            }
+            else if($data->action == 'questionAnswer'){
+                $room = $this->findServer($data->id);
+                $room->receiveQuestionAnswer($data->questionAnswer, $conn);
+            }
+            else if($data->action == 'finalAnswer'){
+                $room = $this->findServer($data->id);
+                $room->receivedFinalAnswer($data->finalAnswer, $conn);
+            }
+
         }
-        else if($data->action == "setServer"){
-            echo "\nadding user \n";
-            $room = $this->findServer($data->id);
-            $room->addClient($conn, $data->userName);
+        //command for server
+        else{
+            echo "ServerClient \n";
+            
+            if($data->action == "createServerGetroomkey"){
+                $this->createServer($conn);
+            }
+
+            else if($data->action == 'startGame'){
+                $questionAnswer = $this->sql->getQuestionAndAnswer();
+                $room = $this->findServerHub($conn);
+                $room->sendQuestionAndAnswer($questionAnswer[0], $questionAnswer[1]);
+            }
         }
-        else if($data->action == 'startGame'){
-            $questionAnswer = $this->sql->getQuestionAndAnswer();
-            $room = $this->findServerHub($conn);
-            $room->sendQuestionAndAnswer($questionAnswer[0], $questionAnswer[1]);
-            echo "\n question \n ";
-        }
-        else if($data->action == 'questionAnswer'){
-            /*data->id data->questionAnswer*/
-            $room = $this->findServer($data->id);
-            print("\n this is \n ");
-            print($data->questionAnswer);
-            $room->receiveQuestionAnswer($data->questionAnswer, $conn);
-        }
-        else if($data->action == 'finalAnswer'){
-            echo "final Answer\n";
-            $room = $this->findServer($data->id);
-            $room->receivedFinalAnswer($data->finalAnswer, $conn);
-        }
+        
+        
+
 
     
     }
@@ -114,6 +111,8 @@ class Chat implements MessageComponentInterface
      * @param ConnectionInterface $conn
      * @return void
      */
+    
+    /*need to fix - currently noCLose funciton*/
     public function onClose(ConnectionInterface $conn)
     {
         /*going to have to find all the hubs and do some fun stuff*/
@@ -127,6 +126,9 @@ class Chat implements MessageComponentInterface
      * @param Exception           $e
      * @return void
      */
+    
+    
+    /*need to fix - currently no on error handling*/
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         echo "The following error occured: " . $e->getMessage();
@@ -143,21 +145,29 @@ class Chat implements MessageComponentInterface
         */
     }
     
-    public function createServer(ConnectionInterface $conn){
+    /*
+    for: creates a server from a standard connection
+    */
+    private function createServer(ConnectionInterface $conn){
         $this->HubClinet->attach(new HubClientConnection($conn));
     }
     
+    /*
+    for: find the your specific server by it room number
+    */
     private function findServer($id){
-        echo "\n find server \n";
         foreach ($this->HubClinet as $hc)
         {
             if($hc->getRoomNumber() == $id){
-                echo "found it \n";
                 return $hc;
             }
         }
     }
     
+    
+    /*
+    for: find the your specific server by it connection
+    */
     private function findServerHub(ConnectionInterface $conn){
         $connection;
         foreach ($this->HubClinet as $hc)
@@ -165,7 +175,6 @@ class Chat implements MessageComponentInterface
             if($conn == $hc->getConnection())
             {
                 $connection = $hc;
-                print("\n got it \n");
             }
         }
         return $connection;

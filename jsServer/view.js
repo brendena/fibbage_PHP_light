@@ -57,6 +57,15 @@ var view = (function() {
             }
             this.displayText.innerHTML = concatAnswerList;
         },
+        updateEndOfGameResults: function(question, answer){
+            var displayStats = "<p> Question    " + question + "</p>" + "<p> answer " + answer + "</p>";
+            this.displayText.innerHTML = displayStats;
+            
+            that = this;
+            setTimeout(function(){
+                console.log("starting a new game");
+                that.sendServer.startGame()}, 5000);
+        },
         
         //what a hack
         // i need this but i can't use bind because

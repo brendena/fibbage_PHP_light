@@ -46,21 +46,22 @@ var Connection = (function() {
             if (data.action == 'allnames'){
                 console.log("got message allNames")
                 console.log(data);
-                this.view.updateListAllUsers(data.allnames);
+                this.view.updateListAllUsers(data.response);
                 
             } else if (data.action == 'initNames'){
                 console.log(data);
                 
             }else if (data.action == 'responseAddClient'){
                 if(data.success == true){
-                    this.view.updateUserIsAdded(data.userName);
+                    this.view.updateUserIsAdded(data.response);
                 }
+                /*need to add a pop if faled*/
             }else if (data.action == "sentQuestion"){
-                this.view.updateQuestion(data.question);
+                this.view.updateQuestion(data.response);
             }else if (data.action == "receivedQuestionAnswer"){
                 this.view.updateGotQuestionAnswer();
             }else if (data.action == "sentAnswer"){
-                this.view.updateListAnswers(data.answers);
+                this.view.updateListAnswers(data.response);
             }else if(data.action == "receivedFinalAnswer"){
                 this.view.updateGotFinalAnswer();
             }
