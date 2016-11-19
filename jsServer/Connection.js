@@ -42,7 +42,6 @@ var Connection = (function() {
         },
 
         connectionMessage: function(evt) {
-            console.log("recived message");
             console.log(evt);
             if (!this.open)
                 return;
@@ -50,7 +49,9 @@ var Connection = (function() {
             
             
             var data = JSON.parse(evt.data);
+            console.log("got" + data['action']);
             console.log(data);
+            
             if(data['action'] == 'roomcode'){
                 this.view.updateRandomRoomCode(data['response']);
             }
@@ -66,7 +67,7 @@ var Connection = (function() {
             }
             else if(data['action'] == 'endOfGameResults'){
                 console.log("end of game received");
-                this.view.updateEndOfGameResults(data['question'], data['answer']);
+                this.view.updateEndOfGameResults(data['response']);
             }
             
         },

@@ -62,7 +62,7 @@ var view = (function() {
         updateListAnswers: function(answers){
             console.log(answers);
             console.log("updating list");
-            this.answerSection.innerHTML = "";
+            this.answerSection.innerHTML = "<p>List of possible answers</p>";
             for(var i = 0; i < answers.length; i++ ){
                 this.answerSection.innerHTML += "<button class='answerButton'>" + answers[i] + " </button> ";
             }

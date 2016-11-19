@@ -13,3 +13,30 @@
   background-color: rgba(250, 100, 100, .8);
   border-radius: 40px;
 }
+
+
+.flex{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flex > .answers {
+    
+    
+    justify-content: space-around;
+    
+    width: 30vw;
+    height: 30vh;
+    max-width: 40vh;
+    max-height: 15vh;
+    background-color: whitesmoke;
+    margin: auto;
+    
+    border-radius: 20px;
+    border-color: darkgrey;
+    border-width: 20px;
+    
+    line-height:20vh;
+    margin-top: 30px;
+}

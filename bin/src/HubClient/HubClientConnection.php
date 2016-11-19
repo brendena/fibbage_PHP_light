@@ -15,6 +15,7 @@ class HubClientConnection implements HubClientConnectionInterface
     private $answerList; //
     private $clientFinalAnswersList;
     private $pointsAwarded;
+    private $roomSize;
     
     public function __construct(ConnectionInterface $conn)
     {
@@ -23,6 +24,7 @@ class HubClientConnection implements HubClientConnectionInterface
         $this->answer = [];
         $this->answerConn = [];
         $this->pointsAwarded = 200;
+        $this->roomSize = 8;
         
         $this->setRoomNumber();
         echo $this->roomNumber;
@@ -40,8 +42,11 @@ class HubClientConnection implements HubClientConnectionInterface
      */
     
     public function addClient(ConnectionInterface $conn, $userName){
-        
-        if($this->repository->addClient($conn,$userName) == true){
+        if($this->repository->getCount() >= $this->roomSize){
+            echo "Bad Info: The room is full \n";
+            $conn->send($this->jEncode('responseAddClient', "the room is full", false));
+        }
+        else if($this->repository->addClient($conn,$userName) == true){
             //update 
             $conn->send($this->jEncode('responseAddClient', $userName));
             
@@ -130,7 +135,7 @@ class HubClientConnection implements HubClientConnectionInterface
     
     public function receivedFinalAnswer($answer,ConnectionInterface $conn){
         echo "recieved question \n\n\n";
-        $i = 0;
+        $i = 0;http://localhost/php/FinalTerm/fibbage_PHP_light/client.html
         
         for($i; $i < count($this->clientFinalAnswersList) &&  $i == -1; $i++){
             if($this->clientFinalAnswersList[$i][1] == $conn){
@@ -161,7 +166,6 @@ class HubClientConnection implements HubClientConnectionInterface
     }
     
 
-    
     public function onMessage(ConnectionInterface $conn, $msg){
         echo "got message";
     }
@@ -202,7 +206,7 @@ class HubClientConnection implements HubClientConnectionInterface
             }
         }
         
-        $response = ['question' => $this->question,
+        $response =['question' => $this->question,
                 'answer' => $this->answer,
                 'correctUsers' => $correctUser,
                 'endResults' => $returnEndResults];

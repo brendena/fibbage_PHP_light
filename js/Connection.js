@@ -39,25 +39,29 @@ var Connection = (function() {
             
             var data = JSON.parse(evt.data);
             
-            console.log("got" + data.action);
+            console.log("got" + data['action']);
             console.log(data);
             
             
             if (data.action == 'responseAddClient'){
                 if(data.success == true){
-                    this.view.updateUserIsAdded(data.response);
+                    this.view.updateUserIsAdded(data['response']);
                 }
                 else{
                     alert(data.response)
                 }
                 /*need to add a pop if faled*/
-            }else if (data.action == "sentQuestion"){
-                this.view.updateQuestion(data.response);
-            }else if (data.action == "receivedQuestionAnswer"){
+            }
+            else if (data['action'] == "sentQuestion"){
+                this.view.updateQuestion(data['response']);
+            }
+            else if (data['action'] == "receivedQuestionAnswer"){
                 this.view.updateGotQuestionAnswer();
-            }else if (data.action == "sentAnswer"){
-                this.view.updateListAnswers(data.response);
-            }else if(data.action == "receivedFinalAnswer"){
+            }
+            else if (data['action'] == "sentAnswer"){
+                this.view.updateListAnswers(data['response']);
+            }
+            else if(data['action'] == "receivedFinalAnswer"){
                 this.view.updateGotFinalAnswer();
             }
               

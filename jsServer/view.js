@@ -26,6 +26,17 @@ var view = (function() {
         displayText: document.getElementById('displayText'),
         startButton: document.getElementById('startButton'),
         
+        QNASection: document.getElementById('QNASection'),
+        QNAText: document.getElementById('QNAText'),
+        QNAFlex: document.getElementById('QNAFlex'),
+        
+        
+        resultsSection: document.getElementById('resultsSection'),
+        resultsText: document.getElementById('resultsText'),
+        resultsFlex: document.getElementById('resultsFlex'),
+        
+        
+        
         updateStatus: function(status){
             this.status.innerHTML = "status - " + status;
         },
@@ -48,31 +59,81 @@ var view = (function() {
             this.listUsers.innerHTML = concatUserList; 
         },
         updateQuestion: function(question){
-            this.displayText.innerHTML = "<p>" + question + "</p>";
+            this.updateUserInterfaceStates(1);
+            this.QNAText.innerHTML =  question;
         },
         updateListAnswers: function(answers){
+            
             concatAnswerList = "";
+            
             for(var i = 0; i < answers.length; i++ ){
-                concatAnswerList += " <p class='answers'> " + answers[i] +  "</p>";
+                concatAnswerList += " <div class='answers'> " + answers[i] +  "</div>";
             }
-            this.displayText.innerHTML = concatAnswerList;
+            
+            this.QNAFlex.innerHTML = concatAnswerList;
         },
-        updateEndOfGameResults: function(question, answer){
-            var displayStats = "<p> Question    " + question + "</p>" + "<p> answer " + answer + "</p>";
-            this.displayText.innerHTML = displayStats;
+        updateEndOfGameResults: function(results){
+            this.updateUserInterfaceStates(2);
+            
+            //var displayStats = "<p> Question    " + question + "</p>" + "<p> answer " + answer + //"</p>";
+            //this.resultsSection.innerHTML = displayStats;
+            concatAnswerList = "";
+            
+            for(var i = 0; i < results['endResults'].length; i++ ){
+                for(var j = 0; j < results['endResults'][i].length; j++){
+                    if(j == 0){
+                        concatAnswerList += "<div class='answers'> Answer " +  results['endResults'][i][j];
+                    }
+                    else if(j == 1){
+                        concatAnswerList += "user submited " +  results['endResults'][i][j];
+                    }
+                    else{
+                        concatAnswerList += "fooled " +  results['endResults'][i][j];
+                    }
+                }
+                concatAnswerList += "</div>";
+            }
+            
+            this.resultsFlex.innerHTML = concatAnswerList;
             
             that = this;
-            setTimeout(function(){
-                console.log("starting a new game");
-                that.sendServer.startGame()}, 5000);
+            
+            //setTimeout(function(){
+            //    console.log("starting a new game");
+            //    that.sendServer.startGame()}, 5000);
         },
+        
+        updateUserInterfaceStates:function(number){
+            //pre game
+            switch(number){
+                case 0:
+                    this.QNASection.style.display = "none";
+                    this.resultsSection.style.display = "none";
+                    break;
+                //QNA section
+                case 1:
+                    this.QNASection.style.display = "block";
+                    this.resultsSection.style.display = "none";
+                    break;
+                //results section
+                case 2:
+                    this.QNASection.style.display = "none";
+                    this.resultsSection.style.display = "block";
+                    break;
+            }
+        },
+        
         
         //what a hack
         // i need this but i can't use bind because
         // i'll loose the value's of the event.
-        run:  function(){  
+        run:  function(){
             var that = this;
+            //didn't seem to work
             //setTimeout(that.sendServer.getRoomKey,3000);
+            
+            this.updateUserInterfaceStates(0);
+        
             this.connectionButton.addEventListener("click",function(){
                 console.log("connection");
                 that.sendServer.getRoomKey();
