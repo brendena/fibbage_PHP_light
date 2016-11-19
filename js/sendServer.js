@@ -13,12 +13,6 @@ var sendServer = (function() {
 
     sendServer.prototype = {
         //this is the call
-        updateUsername: function(name){
-            this.socket.send(JSON.stringify({
-                    action: 'setname',
-                    username: name
-            }));
-        },
         connectHost: function(id, userName){
             this.socket.send(JSON.stringify({
                 action: 'setServer',

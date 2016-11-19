@@ -34,26 +34,21 @@ var Connection = (function() {
         },
 
         connectionMessage: function(evt) {
-            console.log("recived message");
             if (!this.open)
                 return;
             
-            
-            
             var data = JSON.parse(evt.data);
-            console.log(data);
+            
             console.log("got" + data.action);
-            if (data.action == 'allnames'){
-                console.log("got message allNames")
-                console.log(data);
-                this.view.updateListAllUsers(data.response);
-                
-            } else if (data.action == 'initNames'){
-                console.log(data);
-                
-            }else if (data.action == 'responseAddClient'){
+            console.log(data);
+            
+            
+            if (data.action == 'responseAddClient'){
                 if(data.success == true){
                     this.view.updateUserIsAdded(data.response);
+                }
+                else{
+                    alert(data.response)
                 }
                 /*need to add a pop if faled*/
             }else if (data.action == "sentQuestion"){

@@ -115,11 +115,13 @@ class Chat implements MessageComponentInterface
     /*need to fix - currently noCLose funciton*/
     public function onClose(ConnectionInterface $conn)
     {
+        echo "somebody left";
         /*going to have to find all the hubs and do some fun stuff*/
         //$this->repository->removeClient($conn);
     }
 
     /**
+    This function is called by the web hubClient user interface
      * Called when an error occurs on a connection
      *
      * @param ConnectionInterface $conn

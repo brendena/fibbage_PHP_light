@@ -22,13 +22,6 @@ class ChatConnection implements ChatConnectionInterface
     private $name;
 
     /**
-     * The ChatRepositoryInterface instance
-     *
-     * @var ChatRepositoryInterface
-     */
-    private $repository;
-
-    /**
      * ChatConnection Constructor
      *
      * @param ConnectionInterface     $conn
@@ -53,48 +46,7 @@ class ChatConnection implements ChatConnectionInterface
         return $this->connection;
     }
 
-    /**
-     * Set the name for this connection
-     *
-     * @param string $name
-     * @return void
-     */
-    public function setName($name)
-    {
-        if ($name === "")
-            return;
 
-        // Check if the name exists already
-        if ($this->repository->getClientByName($name) !== null)
-        {
-            $this->send([
-                'action'   => 'setname',
-                'success'  => false,
-                'username' => $this->name
-            ]);
-
-            return;
-        }
-
-        $this->name = $name;
-
-        $this->send([
-            'action'   => 'setname',
-            'success'  => true,
-            'username' => $this->name
-        ]);
-    }
-
-    public function sendAllNames($names)
-    {
-        echo "sending all names " . PHP_EOL;
-        $this->send([
-           'action' => 'allnames',
-           'success' => true,
-           'allnames' => $names
-        ]);
-    }
-    
     
     /**
      * Get the username of the connection

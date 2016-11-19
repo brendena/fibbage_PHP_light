@@ -29,7 +29,16 @@ class HubClientConnection implements HubClientConnectionInterface
         
         $this->connection->send($this->jEncode('roomcode', $this->roomNumber));
     }
-
+    
+     /**
+     Add the client
+     if(true)
+        add the user to repository and send the hubServer a update list of all users
+     else
+        it log error and send a message to user to try again
+    
+     */
+    
     public function addClient(ConnectionInterface $conn, $userName){
         
         if($this->repository->addClient($conn,$userName) == true){
@@ -42,19 +51,21 @@ class HubClientConnection implements HubClientConnectionInterface
                                                    )
                                    );
             
+
         }
         else{
-            echo "error: the name has already been taken \n";
-            $conn->send($this->jEncode('responseAddClient', $userName, false));
+            echo "Bad Info: the name has already been taken \n";
+            $conn->send($this->jEncode('responseAddClient', "userName has been taken " .$userName, false));
         }
-        
-
-        
-        
-
-        
     }
-    //Start of game
+    
+     /**
+     This starts and reset the game.
+     So it set all variables back to default and gets a new question.
+     It then send all the information to the client and hub
+     
+     This function is called by the web hubClient user interface
+     */
     public function sendQuestionAndAnswer($question, $answer){
         $this->resetVariables();
         
@@ -67,21 +78,32 @@ class HubClientConnection implements HubClientConnectionInterface
         $this->connection->send($this->jEncode('sentQuestion', $question));
     }
     
+     /**
+    received all the answer from the clients
+    
+    if(receivedAllAnswer == true)
+      send a list of possible options to guess from
+      
+    else
+      wait until everbody submits
+    
+    */
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
-        echo "recieved question \n\n\n";
+        echo "recieved question \n\n";
         $i = 0;
         
         
         
         for($i; $i < count($this->answerList) &&  $i == -1; $i++){
             if($this->answerList[$i][1] == $conn){
-                echo "you've already submitted";
+                echo "Bad Info: you've already submitted\n";
                 $i = -1;
             }
         }
         
+        //if you havent submited a anwer yet
         if($i != -1){
-            $this->answerList[] = [$answer, $conn];
+            $this->answerList[] = [$answer, $conn];    
         }
         
         
@@ -112,7 +134,7 @@ class HubClientConnection implements HubClientConnectionInterface
         
         for($i; $i < count($this->clientFinalAnswersList) &&  $i == -1; $i++){
             if($this->clientFinalAnswersList[$i][1] == $conn){
-                echo "you've already submitted";
+                echo "Bad Info: you've already submitted\n";
                 $i = -1;
             }
         }
@@ -180,17 +202,13 @@ class HubClientConnection implements HubClientConnectionInterface
             }
         }
         
-        
-        $this->connection->send(
-            json_encode([
-                'action' => 'endOfGameResults',
-                'success' => true,
-                'question' => $this->question,
+        $response = ['question' => $this->question,
                 'answer' => $this->answer,
                 'correctUsers' => $correctUser,
-                'endResults' => $returnEndResults
-            ])
-        );
+                'endResults' => $returnEndResults];
+        
+        $this->connection->send($this->jEncode('endOfGameResults', $response));
+
         
         
     }
