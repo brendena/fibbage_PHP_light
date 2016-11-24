@@ -77,7 +77,9 @@ var view = (function() {
             
             //var displayStats = "<p> Question    " + question + "</p>" + "<p> answer " + answer + //"</p>";
             //this.resultsSection.innerHTML = displayStats;
+            
             concatAnswerList = "";
+            concatAnswerList = "<button class='btn' id='sendNextQuestion'>send question</button> ";
             
             for(var i = 0; i < results['endResults'].length; i++ ){
                 for(var j = 0; j < results['endResults'][i].length; j++){
@@ -98,9 +100,15 @@ var view = (function() {
             
             that = this;
             
-            //setTimeout(function(){
-            //    console.log("starting a new game");
-            //    that.sendServer.startGame()}, 5000);
+            document.getElementById('sendNextQuestion').addEventListener("click",function(){
+                
+                that.sendServer.startGame();
+            });
+            
+            
+            setTimeout(function(){
+                console.log("starting a new game");
+                that.sendServer.startGame()}, 30000);
         },
         
         updateUserInterfaceStates:function(number){

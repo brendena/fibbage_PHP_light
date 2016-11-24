@@ -3,6 +3,7 @@ html,body {
 }
 
 .btn {
+  border: 0px;
   border-radius: 20px;
   color: #ffffff;
   font-size: 4vh;
@@ -73,6 +74,7 @@ body
   border: 15px solid #BADA55;
   background-color: #fc6f5f;
   border-radius: 40px;
+  overflow-y: auto;
 }
 #center{
     margin: 0 auto;
@@ -86,4 +88,17 @@ body
     font-size: 8vh;
 }
 
+.pQuestions{
+    margin: 0 auto;
+    width: 50%;
+    background: white;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 20px auto;
+}
+
+input{
+    height: 5vh;
+    min-height: 15px;
+}
 

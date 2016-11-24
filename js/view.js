@@ -15,11 +15,8 @@ var view = (function() {
         
     };
     view.prototype = {
-        /* probable don't need all these id anymore with the 
-           Since i section off main parts.                */
         status: document.getElementById('status'),
         userName: document.getElementById('userName'),
-        listName: document.getElementById('listName'),
         UserNameInput: document.getElementById('username'),
         ServerIdInput: document.getElementById('serverIdInput'),
         SubmitUserButton: document.getElementById('submitUser'),
@@ -64,7 +61,7 @@ var view = (function() {
             console.log("updating list");
             this.answerSection.innerHTML = "<p>List of possible answers</p>";
             for(var i = 0; i < answers.length; i++ ){
-                this.answerSection.innerHTML += "<button class='answerButton'>" + answers[i] + " </button> ";
+                this.answerSection.innerHTML += "<button class='btn answerButton'>" + answers[i] + " </button> ";
             }
             var buttons = document.getElementsByClassName("answerButton");
             
@@ -154,4 +151,3 @@ var view = (function() {
 
     return view;
 })();
-console.log()
