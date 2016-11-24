@@ -97,8 +97,11 @@ body
     margin: 20px auto;
 }
 
-input{
+.resizeInput{
     height: 5vh;
     min-height: 15px;
+}
+table{
+    margin: 0 auto;
 }
 

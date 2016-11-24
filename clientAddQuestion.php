@@ -23,11 +23,11 @@ if(isset($_POST["question"]) && $_POST["answer"]){
                 <table id='acct_form'>
                     <tr>
                         <td class='labels'>question:</td>
-                        <td><input name='question' size='100' /></td>
+                        <td><input class='resizeInput' name='question' size='100' /></td>
                     </tr>
                     <tr>
                         <td class='labels'>answer:</td>
-                        <td><input name='answer' size='25' /></td>
+                        <td><input class='resizeInput' name='answer' size='25' /></td>
                     </tr>
                     <tr>
                        <td><input class="btn" type='submit' value='create question' name='s' />
