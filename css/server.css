@@ -6,12 +6,8 @@
 }
 #container
 {
-  font-family: Georgia, Serif;
-
-
   border-color: rgba(0, 0, 0, .5);
   background-color: rgba(250, 100, 100, .8);
-  border-radius: 40px;
 }
 
 

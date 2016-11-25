@@ -30,9 +30,12 @@ if(isset($_POST["question"]) && $_POST["answer"]){
                         <td><input class='resizeInput' name='answer' size='25' /></td>
                     </tr>
                     <tr>
-                       <td><input class="btn" type='submit' value='create question' name='s' />
-                       <a class="btn" href="clientOptions.php"> return</a>
-                        </td>
+                       <td>
+                           <a class="btn" href="clientOptions.php"> return</a>
+                       </td>
+                       <td>
+                           <input class="btn" type='submit' value='create question' name='s' />
+                       </td>
                     </tr>
                 </table>
             </form>
