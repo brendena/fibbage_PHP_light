@@ -80,8 +80,8 @@ li a:hover {
 @media all and (max-width: 800px ){
     #container {
        flex: .9;
-       width:90%;
-       border: 6 px solid #BADA55;
+       width:95%;
+       border: 2.5vw solid #BADA55;
     }
 }
 

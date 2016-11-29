@@ -42,15 +42,11 @@ var Connection = (function() {
             console.log("got" + data['action']);
             console.log(data);
             
-            
-            if (data.action == 'responseAddClient'){
-                if(data.success == true){
-                    this.view.updateUserIsAdded(data['response']);
-                }
-                else{
-                    alert(data.response)
-                }
-                /*need to add a pop if faled*/
+            if (data['success'] == "false"){
+                this.errorHandling(data['response']);
+            }
+            else if (data['action'] == 'responseAddClient'){
+                this.view.updateUserIsAdded(data['response']);
             }
             else if (data['action'] == "sentQuestion"){
                 this.view.updateQuestion(data['response']);
@@ -64,15 +60,26 @@ var Connection = (function() {
             else if(data['action'] == "receivedFinalAnswer"){
                 this.view.updateGotFinalAnswer();
             }
+            else if(data['action'] == "serverClosed"){
+                this.socket.close();
+                console.log("closing server");  
+            }
               
         },
 
         connectionClose: function(evt) {
+            this.errorHandling("your server lost connection or you lost connection");
             console.log("got closed connection");
             this.open = false;
             this.view.updateStatus("closed");
             
         },
+        errorHandling:function(errorMessage){
+            var e = new Error(errorMessage); 
+            alert(errorMessage);
+            throw e;
+            
+        }
     };
 
     return Connection;

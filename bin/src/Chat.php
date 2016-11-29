@@ -20,7 +20,7 @@ class Chat implements MessageComponentInterface
     /* Chat Constructor */
     public function __construct()
     {
-        $this->HubClinet = new SplObjectStorage;
+        $this->HubClient = new SplObjectStorage;
         $this->sql = new MySQLC();
         
         
@@ -57,18 +57,18 @@ class Chat implements MessageComponentInterface
         //command for client
         if($data->action == 'questionAnswer' || $data->action == 'finalAnswer' || $data->action == 'setServer'){
             echo "client \n";
+            $room = $this->findServer($data->id, $data->action, $conn);
             
-            if($data->action == "setServer"){
-                $room = $this->findServer($data->id);
-                $room->addClient($conn, $data->userName);
-            }
-            else if($data->action == 'questionAnswer'){
-                $room = $this->findServer($data->id);
-                $room->receiveQuestionAnswer($data->questionAnswer, $conn);
-            }
-            else if($data->action == 'finalAnswer'){
-                $room = $this->findServer($data->id);
-                $room->receivedFinalAnswer($data->finalAnswer, $conn);
+            if(!is_null($room)){
+                if($data->action == "setServer"){
+                    $room->addClient($conn, $data->userName);
+                } 
+                else if($data->action == 'questionAnswer'){
+                    $room->receiveQuestionAnswer($data->questionAnswer, $conn);
+                }
+                else if($data->action == 'finalAnswer'){
+                    $room->receivedFinalAnswer($data->finalAnswer, $conn);
+                }
             }
 
         }
@@ -116,6 +116,28 @@ class Chat implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         echo "somebody left";
+        $serverHub = $this->findServerHub($conn);
+        if(is_null($serverHub) == false){
+            echo "Server Disconnected\n";
+            $serverHub->destroyServer();
+            $this->HubClient->detach($serverHub);
+            /*
+            foreach ($this->HubClinet as $hc)
+            {
+                if($hc == $serverHub){
+                    echo "\nfound it\n";
+                    $this->HubClient->detach($hc);
+                }    
+            }
+            */
+            
+            
+            
+        }
+        else{
+            echo "Client Disconnected\n";
+        }
+        
         /*going to have to find all the hubs and do some fun stuff*/
         //$this->repository->removeClient($conn);
     }
@@ -151,19 +173,27 @@ class Chat implements MessageComponentInterface
     for: creates a server from a standard connection
     */
     private function createServer(ConnectionInterface $conn){
-        $this->HubClinet->attach(new HubClientConnection($conn));
+        $this->HubClient->attach(new HubClientConnection($conn));
     }
     
     /*
     for: find the your specific server by it room number
     */
-    private function findServer($id){
-        foreach ($this->HubClinet as $hc)
+    private function findServer($id, $action, ConnectionInterface $conn){
+        
+        foreach ($this->HubClient as $hc)
         {
             if($hc->getRoomNumber() == $id){
                 return $hc;
             }
         }
+        $conn->send(json_encode([
+                        'action' => $action,
+                        'success' => "false",
+                        'response' => "Your room code is wrong"])
+                    );
+        
+        return null;
     }
     
     
@@ -171,11 +201,12 @@ class Chat implements MessageComponentInterface
     for: find the your specific server by it connection
     */
     private function findServerHub(ConnectionInterface $conn){
-        $connection;
-        foreach ($this->HubClinet as $hc)
+        $connection = null;
+        foreach ($this->HubClient as $hc)
         {
             if($conn == $hc->getConnection())
             {
+                echo "\nfound the server\n";
                 $connection = $hc;
             }
         }

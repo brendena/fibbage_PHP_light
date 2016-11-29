@@ -246,4 +246,10 @@ class HubClientConnection implements HubClientConnectionInterface
         
     }
     
+    public function destroyServer(){
+        echo "\ndeleting all connections on hubClient\n";
+        $this->repository->sendAllClientsRequest($this->jEncode("serverClosed",""));
+        
+    }
+    
 }

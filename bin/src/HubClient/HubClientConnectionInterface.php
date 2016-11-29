@@ -17,4 +17,6 @@ interface HubClientConnectionInterface
     public function sendQuestionAndAnswer($question, $answer);
     
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn);
+    
+    public function destroyServer();
 }
