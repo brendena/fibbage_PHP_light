@@ -63,7 +63,7 @@ var view = (function() {
             this.QNAText.innerHTML =  question;
         },
         updateListAnswers: function(answers){
-            
+            this.updateUserInterfaceStates(2);
             concatAnswerList = "";
             
             for(var i = 0; i < answers.length; i++ ){
@@ -73,7 +73,7 @@ var view = (function() {
             this.QNAFlex.innerHTML = concatAnswerList;
         },
         updateEndOfGameResults: function(results){
-            this.updateUserInterfaceStates(2);
+            this.updateUserInterfaceStates(3);
             
             //var displayStats = "<p> Question    " + question + "</p>" + "<p> answer " + answer + //"</p>";
             //this.resultsSection.innerHTML = displayStats;
@@ -81,6 +81,7 @@ var view = (function() {
             concatAnswerList = "";
             concatAnswerList = "<button class='btn' id='sendNextQuestion'>send question</button> ";
             
+            concatAnswerList += "<div class='answers'> Question: " + results['question'] + "     answer: "+ results["answer"] + "</div>";
             for(var i = 0; i < results['endResults'].length; i++ ){
                 for(var j = 0; j < results['endResults'][i].length; j++){
                     if(j == 0){
@@ -121,10 +122,16 @@ var view = (function() {
                 //QNA section
                 case 1:
                     this.QNASection.style.display = "block";
+                    this.QNAFlex.style.display = "none"
+                    this.resultsSection.style.display = "none";
+                    break;
+                case 2:
+                    this.QNASection.style.display = "block";
+                    this.QNAFlex.style.display = "block"
                     this.resultsSection.style.display = "none";
                     break;
                 //results section
-                case 2:
+                case 3:
                     this.QNASection.style.display = "none";
                     this.resultsSection.style.display = "block";
                     break;
