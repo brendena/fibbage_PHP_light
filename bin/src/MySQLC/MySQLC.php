@@ -35,7 +35,7 @@ class MySQLC
     }
 
    public function getQuestionAndAnswer($topic = "question"){
-       $query= "Select question, answer from Question";
+       $query= "Select question, answer from Question ORDER BY RAND() LIMIT 1;";
        $result = mysqli_query($this->link, $query);
 
        while($row = mysqli_fetch_array($result))

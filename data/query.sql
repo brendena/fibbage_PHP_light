@@ -5,4 +5,6 @@ use fibbage;
 
 #select * from Question;
 
-select * from UserDb;
+#select * from Question;
+
+Select question, answer from Question ORDER BY RANDOM() LIMIT 1;

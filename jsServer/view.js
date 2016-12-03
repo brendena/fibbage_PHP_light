@@ -81,14 +81,14 @@ var view = (function() {
             concatAnswerList = "";
             concatAnswerList = "<button class='btn' id='sendNextQuestion'>send question</button> ";
             
-            concatAnswerList += "<div class='answers'> Question: " + results['question'] + "     answer: "+ results["answer"] + "</div>";
+            concatAnswerList += "<div class='answers' id='officalAnswer'><p> Question: " + results['question'] + " </p>   <p> answer: "+ results["answer"] + "</p></div>";
             for(var i = 0; i < results['endResults'].length; i++ ){
                 for(var j = 0; j < results['endResults'][i].length; j++){
                     if(j == 0){
-                        concatAnswerList += "<div class='answers'> Answer " +  results['endResults'][i][j];
+                        concatAnswerList += "<div class='answers'> <p> Answer " +  results['endResults'][i][j];
                     }
                     else if(j == 1){
-                        concatAnswerList += "user submited " +  results['endResults'][i][j];
+                        concatAnswerList += " - " +  results['endResults'][i][j] + "</p>";
                     }
                     else{
                         concatAnswerList += "fooled " +  results['endResults'][i][j];
@@ -106,10 +106,11 @@ var view = (function() {
                 that.sendServer.startGame();
             });
             
-            
+            /*
             setTimeout(function(){
                 console.log("starting a new game");
                 that.sendServer.startGame()}, 30000);
+            */
         },
         
         updateUserInterfaceStates:function(number){
