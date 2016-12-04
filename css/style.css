@@ -67,14 +67,15 @@ li a:hover {
   font-family: Georgia, Serif;
   
   margin: auto;
-  flex: .8;
+  flex: .7;
   width: 80%;
   border: 15px solid #BADA55;
   background-color: #fc6f5f;
   border-radius: 40px;
-  border-top-right-radius:10px;
-  border-bottom-left-radius:10px; 
-  overflow-y: auto;
+  border-top-left-radius:0px;
+  border-bottom-right-radius:0px; 
+  overflow-y: auto; 
+  box-shadow: 15px 20px;
 }
 
 @media all and (max-width: 800px ){
@@ -115,11 +116,25 @@ li a:hover {
 }
 .resizeInput:focus{
     border-color: aqua;
-    border-width: 10px;
+    border-width: 1.2vh;
     border-radius: 5px;
     border-bottom-left-radius: 15px;
     text-align: left; 
 }
+input:required:invalid, input:focus:invalid {
+  /* insert your own styles for invalid form input */
+  border-color:crimson;
+  background:hsla(34, 100%, 82%, 0.9);
+}
+input:valid {
+   border-color: #06ff00; 
+}
+
+.whiteInput:required:invalid, .whiteInput:focus:invalid {
+  /* insert your own styles for invalid form input */
+  background:snow;
+}
+
 table{
     margin: 0 auto;
 }

@@ -19,9 +19,13 @@ if (!$db_selected) {
     die ('Can\'t use database $db : ' . $db->error); 
 }
 
-function sqliInsertUser($email, $pwd){
-    //echo "Insert into UserDB values('".$email . "','" . $pwd ."');";
-    return "Insert into UserDB values('".$email . "','" . $pwd ."');";
+function sqliInsertUser($email, $pwd, $age, $fn, $ln){
+    echo "Insert into UserDB values('".$email . "','" . $pwd . "','"
+                                        . $age  . "','" . $fn  . "','" 
+                                        . $ln . "');";
+    return "Insert into UserDB values('".$email . "','" . $pwd . "','"
+                                        . $age  . "','" . $fn  . "','" 
+                                        . $ln . "');";
 } 
 
 function sqliSelectUser($email, $pwd){

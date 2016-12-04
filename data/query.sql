@@ -7,4 +7,4 @@ use fibbage;
 
 #select * from Question;
 
-Select question, answer from Question ORDER BY RANDOM() LIMIT 1;
+#Select question, answer from Question ORDER BY RANDOM() LIMIT 1;

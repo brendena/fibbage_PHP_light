@@ -16,6 +16,7 @@
 
     else create a account
     */
+
     if(isset($_POST["email"]) && isset($_POST["pwd"]) )
     {
         $query = sqliSelectUser($_POST["email"], $_POST["pwd"]);
@@ -40,6 +41,7 @@
                 $_SESSION['email'] = $_POST["email"];
             }
             else{
+
                 echo "fuck";
             }
         }
@@ -71,18 +73,22 @@
         
             <?php
            
-                if(isset($_SESSION['email'])){
+                if(isset($_SESSION['email']) == true){
+                    
                     $form = file_get_contents("LogInclude/loggedIn.html");
                     echo $form; 
                     echo "you have a session started";
                     echo "logged in email:   " . $_SESSION['email'];
                 }
+                //tried to log in but had problem
                 else if(isset($_POST["email"]) == true){
-                    $form = file_get_contents("LogInclude/loggedIn.html");
+                    $form = file_get_contents("LogInclude/form.html");
+                    echo "<p>try again your password was wrong</p>";
                     echo $form; 
                     
                      
                 }
+                //normal 
                 else
                 {
                     $form = file_get_contents("LogInclude/form.html");

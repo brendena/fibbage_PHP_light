@@ -28,6 +28,9 @@ Drop table if Exists UserDB;
 CREATE TABLE IF NOT EXISTS `UserDB` (
   `pwd` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
+  `age` int NOT NULL,
+  `fn` VARCHAR(45) NOT NULL,
+  `ln` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`email`))
 ENGINE = InnoDB;
 
