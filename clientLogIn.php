@@ -16,7 +16,7 @@
 
     else create a account
     */
-
+    $error = "";
     if(isset($_POST["email"]) && isset($_POST["pwd"]) )
     {
         $query = sqliSelectUser($_POST["email"], $_POST["pwd"]);
@@ -25,30 +25,7 @@
         echo "number of row ". $num_rows . "  ";
         if($num_rows == 1){
             $_SESSION['email'] = $_POST["email"];
-            echo "<p>already have a acount</p>";
-        }
-        else{
-            $query = sqliInsertUser($_POST["email"], $_POST["pwd"]);
-            $results = mysqli_query($link, $query);
-            
-            
-            $query = sqliSelectUser($_POST["email"], $_POST["pwd"]);
-            $results = mysqli_query($link, $query);
-            $num_rows = mysqli_num_rows($results);
-            echo "<p> number of rows ". $num_rows . " </p>";
-            if($num_rows == 1){
-                echo "yaya";
-                $_SESSION['email'] = $_POST["email"];
-            }
-            else{
-
-                echo "fuck";
-            }
-        }
-
-        
-        
-        
+        } 
     }
 
     

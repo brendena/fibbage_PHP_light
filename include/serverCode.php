@@ -20,10 +20,10 @@ if (!$db_selected) {
 }
 
 function sqliInsertUser($email, $pwd, $age, $fn, $ln){
-    echo "Insert into UserDB values('".$email . "','" . $pwd . "','"
+    echo "Insert into UserDB values('". $pwd . "','" .$email  . "','"
                                         . $age  . "','" . $fn  . "','" 
                                         . $ln . "');";
-    return "Insert into UserDB values('".$email . "','" . $pwd . "','"
+    return "Insert into UserDB values('". $pwd. "','" . $email . "','"
                                         . $age  . "','" . $fn  . "','" 
                                         . $ln . "');";
 } 
@@ -36,13 +36,13 @@ function sqliSelectUser($email, $pwd){
 function sqliInsertQuestion($question, $answer, $email){
     $query = "Insert into Question (question, answer, userEmail)" .
               "value('" .$question ."','". $answer ."','". $email  ."' );";
-    echo $query;
+    //echo $query;
     return $query;
 }
 
 function sqliSelectQuestion($email){
     $query = "Select * from Question where userEmail ='" . $email.  "';";
-    echo $query;
+    //echo $query;
     return $query;
 }
 

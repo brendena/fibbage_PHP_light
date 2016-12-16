@@ -129,7 +129,11 @@ input:required:invalid, input:focus:invalid {
 input:valid {
    border-color: #06ff00; 
 }
-
+/*
+input:hover{
+    margin:50px;
+}
+*/
 .whiteInput:required:invalid, .whiteInput:focus:invalid {
   /* insert your own styles for invalid form input */
   background:snow;

@@ -24,7 +24,7 @@ $result = mysqli_query($link,$query);
                 <?php
                     while($row = mysqli_fetch_array($result))
                     {
-                        echo "<p class='pQuestions'> question: ". $row['question']."  answer:   " . $row['answer']   .   " </p>";
+                        echo "<div class='pQuestions'> <p> question: ". $row['question']."</p> <p> answer:   " . $row['answer']   .   " </p></div>";
                     }
                 ?>
             </div>

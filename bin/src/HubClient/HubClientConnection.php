@@ -16,6 +16,7 @@ class HubClientConnection implements HubClientConnectionInterface
     private $clientFinalAnswersList;
     private $pointsAwarded;
     private $roomSize;
+    private $state;
     
     public function __construct(ConnectionInterface $conn)
     {
@@ -25,6 +26,7 @@ class HubClientConnection implements HubClientConnectionInterface
         $this->answerConn = [];
         $this->pointsAwarded = 200;
         $this->roomSize = 8;
+        $this->state = 0;
         
         $this->setRoomNumber();
         echo $this->roomNumber;
@@ -42,7 +44,11 @@ class HubClientConnection implements HubClientConnectionInterface
      */
     
     public function addClient(ConnectionInterface $conn, $userName){
-        if($this->repository->getCount() >= $this->roomSize){
+        echo "\n add client equals " . $this->state . "\n";
+        if($this->state != 0){
+            $conn->send($this->jEncode('responseAddClient', "can't join room game in session", false));
+        }
+        else if($this->repository->getCount() >= $this->roomSize){
             echo "Bad Info: The room is full \n";
             $conn->send($this->jEncode('responseAddClient', "the room is full", false));
         }
@@ -72,15 +78,19 @@ class HubClientConnection implements HubClientConnectionInterface
      This function is called by the web hubClient user interface
      */
     public function sendQuestionAndAnswer($question, $answer){
-        $this->resetVariables();
-        
-        $this->question = $question;
-        $this->answer = $answer;
-        
-        
-        $this->repository->sendAllClientsRequest($this->jEncode("sentQuestion", $question));
-        
-        $this->connection->send($this->jEncode('sentQuestion', $question));
+        if($this->state == 0){
+            $this->state = 1;
+            
+            $this->resetVariables();
+
+            $this->question = $question;
+            $this->answer = $answer;
+
+
+            $this->repository->sendAllClientsRequest($this->jEncode("sentQuestion", $question));
+
+            $this->connection->send($this->jEncode('sentQuestion', $question));
+        }
     }
     
      /**
@@ -94,67 +104,77 @@ class HubClientConnection implements HubClientConnectionInterface
     
     */
     public function receiveQuestionAnswer($answer,ConnectionInterface $conn){
-        echo "recieved question \n\n";
-        $i = 0;
-        
-        
-        
-        for($i; $i < count($this->answerList) &&  $i == -1; $i++){
-            if($this->answerList[$i][1] == $conn){
-                echo "Bad Info: you've already submitted\n";
-                $i = -1;
-            }
-        }
-        
-        //if you havent submited a anwer yet
-        if($i != -1){
-            $this->answerList[] = [$answer, $conn];    
-        }
-        
-        
-        $conn->send( $this->jEncode('receivedQuestionAnswer', ""));
-
-        
-        if($this->checkEverbodyAnswered($this->answerList)){
-            $justAnswers = [];
+        if($this->state == 1){
+            echo "recieved question \n\n";
             $i = 0;
-            for($i;  $i < count($this->answerList); $i++){
-                array_push($justAnswers, $this->answerList[$i][0]);
+
+
+
+            for($i; $i < count($this->answerList) &&  $i == -1; $i++){
+                if($this->answerList[$i][1] == $conn){
+                    echo "Bad Info: you've already submitted\n";
+                    $i = -1;
+                }
             }
-            
-            $justAnswers[] = $this->answer;
-            
-            shuffle($justAnswers);
-            
-            $this->repository->sendAllClientsRequest($this->jEncode('sentAnswer', $justAnswers));
-            
-            $this->connection->send($this->jEncode('sendAnswers', $justAnswers));
+
+            //if you havent submited a anwer yet
+            if($i != -1){
+                $this->answerList[] = [$answer, $conn];    
+            }
+
+
+            $conn->send( $this->jEncode('receivedQuestionAnswer', ""));
+
+
+            if($this->checkEverbodyAnswered($this->answerList)){
+                $justAnswers = [];
+                $i = 0;
+                for($i;  $i < count($this->answerList); $i++){
+                    array_push($justAnswers, $this->answerList[$i][0]);
+                }
+
+                $justAnswers[] = $this->answer;
+
+                shuffle($justAnswers);
+
+                $this->repository->sendAllClientsRequest($this->jEncode('sentAnswer', $justAnswers));
+
+                $this->connection->send($this->jEncode('sendAnswers', $justAnswers));
+                $this->state = 2;
+            }
         }
-        
+        else{
+           $conn->send($this->jEncode('receivedQuestionAnswer', "not the time to submit your question's answer", false)); 
+        }
     }
     
     public function receivedFinalAnswer($answer,ConnectionInterface $conn){
-        echo "recieved question \n\n\n";
-        $i = 0;http://localhost/php/FinalTerm/fibbage_PHP_light/client.html
-        
-        for($i; $i < count($this->clientFinalAnswersList) &&  $i == -1; $i++){
-            if($this->clientFinalAnswersList[$i][1] == $conn){
-                echo "Bad Info: you've already submitted\n";
-                $i = -1;
+        if($this->state == 2){
+            echo "recieved question \n\n\n";
+            $i = 0;http://localhost/php/FinalTerm/fibbage_PHP_light/client.html
+
+            for($i; $i < count($this->clientFinalAnswersList) &&  $i == -1; $i++){
+                if($this->clientFinalAnswersList[$i][1] == $conn){
+                    echo "Bad Info: you've already submitted\n";
+                    $i = -1;
+                }
+            }
+
+            if($i != -1){
+                $this->clientFinalAnswersList[] = [$answer, $conn];
+            }
+
+
+            $conn->send($this->jEncode('receivedFinalAnswer', ""));
+
+            if($this->checkEverbodyAnswered($this->clientFinalAnswersList)){
+                $this->submitEndOfGameResults();
+                
             }
         }
-        
-        if($i != -1){
-            $this->clientFinalAnswersList[] = [$answer, $conn];
+        else{
+          $conn->send($this->jEncode('receivedFinalAnswer', "not the time to submit final quess", false));  
         }
-        
-        
-        $conn->send($this->jEncode('receivedFinalAnswer', ""));
-        
-        if($this->checkEverbodyAnswered($this->clientFinalAnswersList)){
-            $this->submitEndOfGameResults();
-        }
-        
         //i could do a return to bring the values back
     }
     
@@ -175,10 +195,14 @@ class HubClientConnection implements HubClientConnectionInterface
     }
     
     private function submitEndOfGameResults(){
+        
+        echo "\n submitting states \n";
+
+        $this->state = 0;
         /*
         So i need to get all the name 
-        
-        
+
+
         [[Answer1,UserWhoSubmitedIt, jim asdf],[Answer2,UserWhoSubmitedIt, asdfasdf], [Answer3, "NONE"]]
         */
         $results = [];
@@ -196,23 +220,22 @@ class HubClientConnection implements HubClientConnectionInterface
             }
             $returnEndResults[] = $results;
             $results= [];
-            
+
         }
-        
+
         $correctUser = [];
         for($j = 0; $j < count($this->clientFinalAnswersList); $j++){
             if($this->answer == substr($this->clientFinalAnswersList[$j][0],0, -1)){
                 $correctUser[] = $this->repository->getClientByConnection($this->clientFinalAnswersList[$j][1])->getName();
             }
         }
-        
+
         $response =['question' => $this->question,
                 'answer' => $this->answer,
                 'correctUsers' => $correctUser,
                 'endResults' => $returnEndResults];
-        
-        $this->connection->send($this->jEncode('endOfGameResults', $response));
 
+        $this->connection->send($this->jEncode('endOfGameResults', $response));
         
         
     }

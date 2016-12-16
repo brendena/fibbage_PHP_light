@@ -9,7 +9,7 @@ it has on the view.
 var Connection = (function() {
 
     function Connection() {
-        this.url = "127.0.0.1:2000";
+        this.url = "brendensnetwork.asuscomm.com:9001";
         this.makeSocket();
         
         var that = this;
